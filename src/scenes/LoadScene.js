@@ -9,24 +9,20 @@ export default class LoadScene extends Phaser.Scene {
 
     }
     preload() {
-        this.load.image("wall","../dist/assets/images/wall.jpg");
+        this.load.image("wall","../dist/assets/images/wall.png");
         this.load.image("Door","../dist/assets/images/door.png");
         this.load.image("DoorOpen","../dist/assets/images/door2.png");
 
-        this.load.image("platform", "../dist/assets/images/platform.png");
         this.load.image("boden", "../dist/assets/images/boden2.png");
-
+        this.load.image("background","../dist/assets/images/background.png");
 
         this.load.image("ground1", "../dist/assets/images/Ground1.png");
         this.load.image("ground2", "../dist/assets/images/Ground2.png");
         this.load.image("ground3", "../dist/assets/images/Ground3.png");
 
-        this.load.image("star", "../dist/assets/images/star.png");
-        this.load.image("bomb", "../dist/assets/images/bomb.png");
-
         this.load.spritesheet("dude", "../dist/assets/sprites/dude.png",{
-            frameWidth: 32,
-            frameHeight: 48
+            frameWidth: 96,
+            frameHeight: 144
         });
         //Loading Bar
         let loadingBar = this.add.graphics({

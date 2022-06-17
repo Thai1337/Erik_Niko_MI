@@ -25,16 +25,28 @@ export default class RoomScene extends Phaser.Scene {
         //let platforms  = this.physics.add.staticGroup();
 
         //platforms.create(0, 1080, 'boden').setScale(10).refreshBody();
+        this.add.image(0, 0, "background").setOrigin(0)
 
-        this.ground = this.add.tileSprite(0,window.innerHeight -286 ,window.innerWidth,100,"ground1").setOrigin(0).setScrollFactor(0);
+        this.ground = this.add.tileSprite(0, 1045 , 1920,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.ground,true);
 
+        this.leftwall = this.add.tileSprite(0,  0, 32,1080,"ground1").setOrigin(0).setScrollFactor(0);
+        this.physics.add.existing(this.leftwall,true);
+
+        this.rightwall = this.add.tileSprite(1888, 0 , 32,1080,"ground1").setOrigin(0).setScrollFactor(0);
+        this.physics.add.existing(this.rightwall,true);
+
+        this.roof = this.add.tileSprite(0, 0 , 1920,32,"ground1").setOrigin(0).setScrollFactor(0);
+        this.physics.add.existing(this.roof,true);
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        this.player = this.physics.add.sprite(100, 450, "dude");
 
-        this.player.setBounce(0.1);
+
+        this.player = this.physics.add.sprite(100, 800, "dude");
+
+
+        this.player.setBounce(0.3);
         this.player.setCollideWorldBounds(true);
 
 
@@ -64,6 +76,9 @@ export default class RoomScene extends Phaser.Scene {
 
 
         this.physics.add.collider(this.player, this.ground);
+        this.physics.add.collider(this.player, this.leftwall);
+        this.physics.add.collider(this.player, this.rightwall);
+        this.physics.add.collider(this.player, this.roof);
     }
 
     update ()
@@ -71,26 +86,26 @@ export default class RoomScene extends Phaser.Scene {
 
         if (this.cursors.left.isDown)
         {
-            this.player.setVelocityX(-160);
+            this.player.setVelocityX(-160*2);
 
             this.player.anims.play('left', true);
         }
         else if (this.cursors.right.isDown)
         {
-            this.player.setVelocityX(160);
+            this.player.setVelocityX(160*2);
 
             this.player.anims.play('right', true);
         }
         else
         {
-            this.player.setVelocityX(0);
+            this.player.setVelocityX(0*2);
 
             this.player.anims.play('turn');
         }
 
         if (this.cursors.up.isDown && this.player.body.touching.down)
         {
-            this.player.setVelocityY(-330);
+            this.player.setVelocityY(-330*1.5);
         }
     }
 
