@@ -9,20 +9,37 @@ export default class LoadScene extends Phaser.Scene {
 
     }
     preload() {
-        this.load.image("wall","../dist/assets/images/wall.png");
-        this.load.image("Door","../dist/assets/images/door.png");
-        this.load.image("DoorOpen","../dist/assets/images/door2.png");
+        this.load.image("wall", "../dist/assets/images/wall.png");
+        this.load.image("Door", "../dist/assets/images/door.png");
+        this.load.image("DoorOpen", "../dist/assets/images/door2.png");
 
         this.load.image("boden", "../dist/assets/images/boden2.png");
-        this.load.image("background","../dist/assets/images/background.png");
+        this.load.image("background", "../dist/assets/images/background.png");
 
         this.load.image("ground1", "../dist/assets/images/Ground1.png");
         this.load.image("ground2", "../dist/assets/images/Ground2.png");
         this.load.image("ground3", "../dist/assets/images/Ground3.png");
 
-        this.load.spritesheet("dude", "../dist/assets/sprites/dude.png",{
-            frameWidth: 96,
-            frameHeight: 144
+        this.load.spritesheet("guyRun", "../dist/assets/sprites/Gunner_Yellow_Run.png",{
+            frameWidth: 48,
+            frameHeight: 38
+        });
+
+
+
+        this.load.spritesheet("guyStanding", "../dist/assets/sprites/Gunner_Yellow_Standing.png", {
+            frameWidth: 48,
+            frameHeight: 38
+        });
+
+        //this.load.spritesheet("dude", "../dist/assets/sprites/dude.png",{
+        //    frameWidth: 96,
+        //    frameHeight: 144
+        //});
+
+        this.load.spritesheet("robot", "../dist/assets/sprites/Robots.png",{
+            frameWidth: 30,
+            frameHeight: 32
         });
         //Loading Bar
         let loadingBar = this.add.graphics({
