@@ -20,6 +20,11 @@ export default class LoadScene extends Phaser.Scene {
         this.load.image("ground2", "../dist/assets/images/Ground2.png");
         this.load.image("ground3", "../dist/assets/images/Ground3.png");
 
+        this.load.spritesheet("hebel", "../dist/assets/sprites/Hebel.png", {
+            frameWidth: 64,
+            frameHeight: 64
+        });
+
         this.load.spritesheet("guyRun", "../dist/assets/sprites/Gunner_Yellow_Run.png",{
             frameWidth: 48,
             frameHeight: 38
@@ -38,7 +43,7 @@ export default class LoadScene extends Phaser.Scene {
         //});
 
         this.load.spritesheet("robot", "../dist/assets/sprites/Robots.png",{
-            frameWidth: 30,
+            frameWidth: 24,
             frameHeight: 32
         });
         //Loading Bar

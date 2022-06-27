@@ -9,7 +9,6 @@ export default class RoomScene extends Phaser.Scene {
         })
         this.cursors = null;
         this.player = null;
-        this.robots = null;
     }
 
 
@@ -68,14 +67,17 @@ export default class RoomScene extends Phaser.Scene {
         this.vplatfrom8 = this.add.tileSprite(960+128+64, 32, 32,540+32,"ground3").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.vplatfrom8, true)
 
+        //this.hebel = this.physics.add.sprite(100, 200, "hebel");
 
 
         //
         this.cursors = this.input.keyboard.createCursorKeys();
 
 
+        //RoomScene.physics.startSystem(Phaser.Physics.P2JS);
 
         this.player = this.physics.add.sprite(100, 800, "guyRun");
+        //player.body.clearShapes();
         //this.player = this.physics.add.sprite(100, 800, "guyStanding");
 
 
@@ -107,6 +109,21 @@ export default class RoomScene extends Phaser.Scene {
             repeat: -1
             });
 
+        this.anims.create({
+            key: 'gegnerAnim',
+            frames: this.anims.generateFrameNumbers('robot', { start: 0, end: 8 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'animHebel',
+            frames: this.anims.generateFrameNumbers('hebel', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: 0
+        });
+
+
         // Plattformen<
         this.physics.add.collider(this.player, this.platfrom1);
         this.physics.add.collider(this.player, this.platfrom2);
@@ -114,8 +131,10 @@ export default class RoomScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.platfrom4);
         this.physics.add.collider(this.player, this.platfrom5);
         this.physics.add.collider(this.player, this.platfrom6);
-        this.physics.add.collider(this.player, this.box);
+        this.collider = this.physics.add.collider(this.player, this.box);
         this.physics.add.collider(this.player, this.vplatfrom8);
+
+
 
 
         // Wände
@@ -125,18 +144,21 @@ export default class RoomScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.roof);
 
         this.robots = this.physics.add.group();
-        this.physics.add.collider(this.player, this.robots, this.hitRobot, null, this);
+
+
+
 
 
         // spawnt Robots
         this.spawnRobot(this.player, "robot");
+        this.spawnRobot(this.player, "robot");
+        this.spawnHebel(this.player, "hebel");
 
 
     }
 
     update ()
     {
-
         if (this.cursors.left.isDown)
         {
             this.player.setVelocityX(-160*3);
@@ -161,15 +183,38 @@ export default class RoomScene extends Phaser.Scene {
         if (this.cursors.up.isDown && this.player.body.touching.down)
         {
             this.player.setVelocityY(-330*3.5);
+
         }
     }
 
     spawnRobot(player, robot){
-            robot = this.robots.create(800, 100, 'robot');
+            //robot = this.robots.create(800, 100, 'robot');
+            robot = this.physics.add.sprite(1600, 450, 'robot');
             robot.setBounce(1);
             robot.setCollideWorldBounds(true);
-            robot.setVelocity(Phaser.Math.Between(-200, 200), 20);
-            robot.setScale(5)
+            robot.setVelocity(Phaser.Math.Between(-300, 300), 20);
+            robot.setScale(4)
+
+            this.physics.add.collider(robot, this.platfrom1);
+            this.physics.add.collider(robot, this.platfrom2);
+            this.physics.add.collider(robot, this.platfrom3);
+            this.physics.add.collider(robot, this.platfrom4);
+            this.physics.add.collider(robot, this.platfrom5);
+            this.physics.add.collider(robot, this.platfrom6);
+            this. collider3 = this.physics.add.collider(robot, this.box);
+            this.physics.add.collider(robot, this.vplatfrom8);
+
+            this.physics.add.collider(robot, this.ground);
+            this.physics.add.collider(robot, this.leftwall);
+            this.physics.add.collider(robot, this.rightwall);
+            this.physics.add.collider(robot, this.roof);
+
+
+            robot.anims.play('gegnerAnim',true);
+
+        this.physics.add.collider(this.player, robot, this.hitRobot, null, this);
+
+
     }
 
     hitRobot (player, robot)
@@ -182,5 +227,19 @@ export default class RoomScene extends Phaser.Scene {
 
         console.log("HIT")
     }
+    spawnHebel(player,hebel) {
+        hebel = this.physics.add.sprite(100, 200, "hebel");
+        this.physics.add.collider(hebel, this.platfrom5);
+        this.physics.add.collider(hebel, this.leftwall);
 
+         this.collider1 =this.physics.add.collider(this.player, hebel, this.hitHebel,null, this);
+    }
+
+    hitHebel(player, hebel){
+        this.collider1.active = false;
+        this.collider.active = false;
+        this.collider3.active = false;
+        this.box.visible = false;
+        hebel.anims.play('animHebel', true)
+    }
 }
