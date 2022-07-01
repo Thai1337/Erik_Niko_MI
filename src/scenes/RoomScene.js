@@ -9,6 +9,9 @@ export default class RoomScene extends Phaser.Scene {
         })
         this.cursors = null;
         this.player = null;
+        //this.Objective = true;
+        this.robotarray = [];
+        this.collider3 = [];
     }
 
 
@@ -68,9 +71,8 @@ export default class RoomScene extends Phaser.Scene {
         this.physics.add.existing(this.vplatfrom8, true)
 
         //this.hebel = this.physics.add.sprite(100, 200, "hebel");
-
-
-        //
+        //this.diamant.enableBody(true, true);
+        this.diamant = this.physics.add.sprite(1840, 900, "diamant").setScale(2);;
         this.cursors = this.input.keyboard.createCursorKeys();
 
 
@@ -122,6 +124,18 @@ export default class RoomScene extends Phaser.Scene {
             frameRate: 10,
             repeat: 0
         });
+        this.anims.create({
+            key: 'doorAnim',
+            frames: this.anims.generateFrameNumbers('doorAnim', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: 0
+        });
+        this.anims.create({
+            key: 'diamant',
+            frames: this.anims.generateFrameNumbers('diamant', { start: 0, end: 0}),
+            frameRate: 10,
+            repeat: 0
+        });
 
 
         // Plattformen<
@@ -145,14 +159,17 @@ export default class RoomScene extends Phaser.Scene {
 
         this.robots = this.physics.add.group();
 
-
-
+        //Diamant
+        this.collider5 =this.physics.add.collider(this.player, this.diamant, this.hitDiamant, null, this);
+        this.physics.add.collider(this.diamant, this.ground);
+        this.physics.add.collider(this.diamant, this.rightwall);
 
 
         // spawnt Robots
         this.spawnRobot(this.player, "robot");
         this.spawnRobot(this.player, "robot");
         this.spawnHebel(this.player, "hebel");
+        this.spawnDoor(this.player, "doorAnim");
 
 
     }
@@ -201,7 +218,10 @@ export default class RoomScene extends Phaser.Scene {
             this.physics.add.collider(robot, this.platfrom4);
             this.physics.add.collider(robot, this.platfrom5);
             this.physics.add.collider(robot, this.platfrom6);
-            this. collider3 = this.physics.add.collider(robot, this.box);
+
+            let colliderTest = this.physics.add.collider(robot, this.box);
+
+            this.collider3.push(colliderTest);
             this.physics.add.collider(robot, this.vplatfrom8);
 
             this.physics.add.collider(robot, this.ground);
@@ -210,6 +230,7 @@ export default class RoomScene extends Phaser.Scene {
             this.physics.add.collider(robot, this.roof);
 
 
+            this.robotarray.push(robot);
             robot.anims.play('gegnerAnim',true);
 
         this.physics.add.collider(this.player, robot, this.hitRobot, null, this);
@@ -219,7 +240,7 @@ export default class RoomScene extends Phaser.Scene {
 
     hitRobot (player, robot)
     {
-        this.physics.pause();
+        //this.physics.pause();
 
         player.setTint(0xff0000);
 
@@ -238,8 +259,48 @@ export default class RoomScene extends Phaser.Scene {
     hitHebel(player, hebel){
         this.collider1.active = false;
         this.collider.active = false;
-        this.collider3.active = false;
+
+        for (let i = 0; i < this.robotarray.length; i++) {
+            this.collider3[i].active = false;
+            //console.log(this.collider3[i]);
+        }
+
         this.box.visible = false;
         hebel.anims.play('animHebel', true)
+    }
+
+
+
+    spawnDoor(player,doorAnim) {
+        doorAnim = this.physics.add.sprite(1630, 440, "doorAnim");
+
+        doorAnim.setScale(4)
+        this.physics.add.collider(doorAnim, this.platfrom6);
+        this.physics.add.collider(doorAnim, this.platfrom4);
+        this.physics.add.collider(doorAnim, this.rightwall);
+        this.physics.add.collider(doorAnim, this.ground);
+
+        this.colliderPlayerDoor4 = this.physics.add.collider(this.player, doorAnim, this.hitDoor,null, this);
+
+
+
+
+    }
+
+    hitDoor(player, doorAnim){
+        doorAnim.setPosition(1630,440)
+        if(this.colliderPlayerDiamond5 == true) {
+            //this.colliderPlayerDoor4.active = false;
+            doorAnim.anims.play('doorAnim', true)
+            this.scene.start(CST.SCENES.MENU);
+        }
+        //if(this.Objective = true){
+           // door.anims.play('doorAnim', true)
+        //}
+        }
+    hitDiamant(){
+        console.log("HIT DIAMND");
+        this.diamant.visible = false;
+        this.colliderPlayerDiamond5 = true;
     }
 }

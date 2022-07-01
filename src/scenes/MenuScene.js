@@ -12,9 +12,12 @@ export default class MenuScene extends Phaser.Scene {
 
     }
     create() {
+        this.add.image(0, 0, "background").setOrigin(0)
         this.add.image(0, 0, "wall").setOrigin(0)
-        let playDoor = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 * 1.72, "Door");
-        let playDoorOpen = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 * 1.72, "DoorOpen");
+        let playDoor = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 * 1.56, "Door");
+        playDoor.setScale(15)
+        let playDoorOpen = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 * 1.56, "DoorOpen");
+        playDoorOpen.setScale(15)
         playDoorOpen.setVisible(false);
         playDoor.setInteractive();
 
