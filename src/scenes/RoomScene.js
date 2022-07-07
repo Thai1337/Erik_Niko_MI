@@ -72,13 +72,15 @@ export default class RoomScene extends Phaser.Scene {
 
         //this.hebel = this.physics.add.sprite(100, 200, "hebel");
         //this.diamant.enableBody(true, true);
-        this.diamant = this.physics.add.sprite(1840, 900, "diamant").setScale(2);;
+        this.diamant = this.physics.add.sprite(1840, 900, "diamant").setScale(2);
         this.cursors = this.input.keyboard.createCursorKeys();
 
 
         //RoomScene.physics.startSystem(Phaser.Physics.P2JS);
 
-        this.player = this.physics.add.sprite(100, 800, "guyRun");
+        this.player = this.physics.add.sprite(100,800 , "guyRun");
+        this.player.setSize(12,38)
+        this.player.setOffset(16,3)
         //player.body.clearShapes();
         //this.player = this.physics.add.sprite(100, 800, "guyStanding");
 
@@ -207,9 +209,11 @@ export default class RoomScene extends Phaser.Scene {
     spawnRobot(player, robot){
             //robot = this.robots.create(800, 100, 'robot');
             robot = this.physics.add.sprite(1600, 450, 'robot');
+            robot.setSize(12,20)
+            robot.setOffset(5,15)
             robot.setBounce(1);
             robot.setCollideWorldBounds(true);
-            robot.setVelocity(Phaser.Math.Between(-300, 300), 20);
+            robot.setVelocity(Phaser.Math.Between(0, 400), 20);
             robot.setScale(4)
 
             this.physics.add.collider(robot, this.platfrom1);
@@ -240,7 +244,7 @@ export default class RoomScene extends Phaser.Scene {
 
     hitRobot (player, robot)
     {
-        //this.physics.pause();
+        this.physics.pause();
 
         player.setTint(0xff0000);
 
@@ -249,7 +253,7 @@ export default class RoomScene extends Phaser.Scene {
         console.log("HIT")
     }
     spawnHebel(player,hebel) {
-        hebel = this.physics.add.sprite(100, 200, "hebel");
+        hebel = this.physics.add.staticSprite(100, 330, "hebel");
         this.physics.add.collider(hebel, this.platfrom5);
         this.physics.add.collider(hebel, this.leftwall);
 
@@ -272,8 +276,8 @@ export default class RoomScene extends Phaser.Scene {
 
 
     spawnDoor(player,doorAnim) {
-        doorAnim = this.physics.add.sprite(1630, 440, "doorAnim");
-
+        doorAnim = this.physics.add.staticSprite(1630, 440, "doorAnim");
+        doorAnim.setSize(32*4,32*4)
         doorAnim.setScale(4)
         this.physics.add.collider(doorAnim, this.platfrom6);
         this.physics.add.collider(doorAnim, this.platfrom4);
@@ -292,6 +296,7 @@ export default class RoomScene extends Phaser.Scene {
         if(this.colliderPlayerDiamond5 == true) {
             //this.colliderPlayerDoor4.active = false;
             doorAnim.anims.play('doorAnim', true)
+            //Pause
             this.scene.start(CST.SCENES.MENU);
         }
         //if(this.Objective = true){
