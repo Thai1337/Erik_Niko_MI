@@ -1,4 +1,5 @@
 import { CST } from "../CST.js";
+import LaserGroup from "../group/LaserGroup.js";
 export default class RoomScene extends Phaser.Scene {
 
 
@@ -12,6 +13,8 @@ export default class RoomScene extends Phaser.Scene {
         //this.Objective = true;
         this.robotarray = [];
         this.collider3 = [];
+        this.laserGroup = null;
+
     }
 
 
@@ -24,7 +27,7 @@ export default class RoomScene extends Phaser.Scene {
 
     }
     create() {
-
+        this.laserGroup = new LaserGroup(this);
         //let platforms  = this.physics.add.staticGroup();
 
         //platforms.create(0, 1080, 'boden').setScale(10).refreshBody();
@@ -46,7 +49,7 @@ export default class RoomScene extends Phaser.Scene {
         this.physics.add.existing(this.roof,true);
         // platforms
 
-        this.platfrom1 = this.add.tileSprite(100, 800 , 192,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platfrom1 = this.add.tileSprite(100, 800 , 192+32,32,"ground3").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platfrom1, true)
 
         this.platfrom2 = this.add.tileSprite(800-32, 600 , 320+64,32,"ground3").setOrigin(0).setScrollFactor(0);
@@ -58,7 +61,7 @@ export default class RoomScene extends Phaser.Scene {
         this.platfrom4 = this.add.tileSprite(1400, 800 , 480,32,"ground3").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platfrom4, true)
 
-        this.platfrom5 = this.add.tileSprite(32, 364 , 288,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platfrom5 = this.add.tileSprite(32, 364 , 288+64,32,"ground3").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platfrom5, true)
 
         this.platfrom6 = this.add.tileSprite(1500, 500 , 256,32,"ground3").setOrigin(0).setScrollFactor(0);
@@ -75,6 +78,7 @@ export default class RoomScene extends Phaser.Scene {
         this.diamant = this.physics.add.sprite(1840, 900, "diamant").setScale(2);
         this.cursors = this.input.keyboard.createCursorKeys();
 
+        this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
 
         //RoomScene.physics.startSystem(Phaser.Physics.P2JS);
 
@@ -172,8 +176,6 @@ export default class RoomScene extends Phaser.Scene {
         this.spawnRobot(this.player, "robot");
         this.spawnHebel(this.player, "hebel");
         this.spawnDoor(this.player, "doorAnim");
-
-
     }
 
     update ()
@@ -184,6 +186,8 @@ export default class RoomScene extends Phaser.Scene {
 
             this.player.anims.play('left', true);
             this.player.flipX=true;
+
+            this.laserGroup.fireDirection(true);
         }
         else if (this.cursors.right.isDown)
         {
@@ -191,6 +195,8 @@ export default class RoomScene extends Phaser.Scene {
 
             this.player.anims.play('right', true);
             this.player.flipX=false;
+
+            this.laserGroup.fireDirection(false);
         }
         else
         {
@@ -202,7 +208,11 @@ export default class RoomScene extends Phaser.Scene {
         if (this.cursors.up.isDown && this.player.body.touching.down)
         {
             this.player.setVelocityY(-330*3.5);
+        }
 
+        if (this.spaceBar.isDown) {
+            console.log("Space bar is down");
+            this.shootLaser();
         }
     }
 
@@ -215,6 +225,8 @@ export default class RoomScene extends Phaser.Scene {
             robot.setCollideWorldBounds(true);
             robot.setVelocity(Phaser.Math.Between(0, 400), 20);
             robot.setScale(4)
+
+            this.physics.add.overlap(this.laserGroup, robot, this.hitStars, null, this );
 
             this.physics.add.collider(robot, this.platfrom1);
             this.physics.add.collider(robot, this.platfrom2);
@@ -239,6 +251,27 @@ export default class RoomScene extends Phaser.Scene {
 
         this.physics.add.collider(this.player, robot, this.hitRobot, null, this);
 
+        this.physics.add.overlap(this.laserGroup, robot, this.shootRobot, null, this);
+
+
+        this.physics.add.overlap(this.laserGroup, this.platfrom1, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platfrom2, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platfrom3, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platfrom4, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platfrom5, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platfrom6, this.shootWall, null, this);
+
+        this.physics.add.overlap(this.laserGroup, this.vplatfrom8, this.shootWall, null, this);
+
+        this.collider6 = this.physics.add.overlap(this.laserGroup, this.box, this.shootWall, null, this);
+        console.log(this.collider6);
+
+        this.physics.add.overlap(this.laserGroup, this.ground, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.leftwall, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.rightwall, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.roof, this.shootWall, null, this);
+
+
 
     }
 
@@ -252,6 +285,29 @@ export default class RoomScene extends Phaser.Scene {
 
         console.log("HIT")
     }
+
+    shootRobot (laser, robot) {
+        console.log("Treffer");
+
+        robot.disableBody(true, true);
+
+        laser.disableBody(true, true);
+        laser.setActive(false);
+        laser.setVisible(false);
+
+        //laser.destroy(true);
+    }
+
+    shootWall(laser, wall) {
+        console.log(" Wand");
+
+        wall.disableBody(true, true);
+        wall.setActive(false);
+        wall.setVisible(false);
+
+        //wall.destroy(true);
+    }
+
     spawnHebel(player,hebel) {
         hebel = this.physics.add.staticSprite(100, 330, "hebel");
         this.physics.add.collider(hebel, this.platfrom5);
@@ -263,6 +319,8 @@ export default class RoomScene extends Phaser.Scene {
     hitHebel(player, hebel){
         this.collider1.active = false;
         this.collider.active = false;
+        this.box.destroy(true);
+        console.log("Collider 6 off")
 
         for (let i = 0; i < this.robotarray.length; i++) {
             this.collider3[i].active = false;
@@ -307,5 +365,9 @@ export default class RoomScene extends Phaser.Scene {
         console.log("HIT DIAMND");
         this.diamant.visible = false;
         this.colliderPlayerDiamond5 = true;
+    }
+
+    shootLaser(leftShot){
+        this.laserGroup.fireLaser(this.player.x, this.player.y);
     }
 }

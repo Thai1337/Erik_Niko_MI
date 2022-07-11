@@ -3,5 +3,7 @@ export const CST = {
         LOAD: "LOAD",
         MENU: "MENU",
         ROOM: "ROOM",
+        ROOM2: "ROOM2",
+        ROOM3: "ROOM3",
     }
 }
