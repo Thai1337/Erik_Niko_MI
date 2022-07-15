@@ -1,7 +1,8 @@
 import { CST } from "../CST.js";
 import eventsCenter from '../events/EventsCenter.js'
 export default class MenuScene extends Phaser.Scene {
-    counter = 0;
+    counter = 1;
+    label;
     constructor() {
         super({
             key: CST.SCENES.MENU
@@ -32,29 +33,32 @@ export default class MenuScene extends Phaser.Scene {
         })
         this.playDoor.on("pointerup", () => {
             //console.log("OPEN THE GATES")
-            if(this.counter === 0) {
+            if(this.counter === 1) {
                 this.scene.start(CST.SCENES.ROOM);
-            }else if(this.counter === 1) {
+            }else if(this.counter === 2) {
                 this.scene.stop(CST.SCENES.ROOM);
                 this.scene.start(CST.SCENES.ROOM2);
 
-            }else if(this.counter === 2) {
+            }else if(this.counter === 3) {
                 this.scene.start(CST.SCENES.ROOM3);
             }
         })
 
-        //this.label = this.add.text(200,400, 'Level: o',{font:"''"});
-        //this.label.setFontSize(40);
+
+
+
 
         eventsCenter.on('update-count', this.updateCount, this);
+
+        this.label = this.add.text(200,400, 'Level: ' + this.counter,{font:"''"});
+        this.label.setFontSize(40);
     }
 
     updateCount(count) {
-        this.counter = count;
+        this.counter++;
 
         console.log('Counter: ' + this.counter);
 
-        this.label = this.add.text(200,400,this.counter,{font:"''"});
     }
 
 }
