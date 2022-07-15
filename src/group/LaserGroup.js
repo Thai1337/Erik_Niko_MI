@@ -10,7 +10,7 @@ export default class LaserGroup extends Phaser.Physics.Arcade.Group
             frameQuantity: 30, // Create 30 instances in the pool
             active: false,
             visible: false,
-            key: 'laser',
+            key: 'laser1',
             classType: Laser,
         })
     }
@@ -42,7 +42,7 @@ export default class LaserGroup extends Phaser.Physics.Arcade.Group
 
 class Laser extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
-        super(scene, x, y, 'laser');
+        super(scene, x, y, 'laser1');
         scene.add.existing(this);
         this.setDepth(10);
         this.setScale(4)

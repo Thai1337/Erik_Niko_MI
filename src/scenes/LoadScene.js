@@ -21,6 +21,7 @@ export default class LoadScene extends Phaser.Scene {
         this.load.image("ground2", "../dist/assets/images/Ground2.png");
         this.load.image("ground3", "../dist/assets/images/Ground3.png");
         //this.load.image("laser", "../dist/assets/images/Laser.png");
+        this.load.image("laser1", "../dist/assets/images/Laser.png");
 
         this.load.spritesheet("portalAnim", "../dist/assets/sprites/potalAnimCUT.png", {
             frameWidth: 83/3,

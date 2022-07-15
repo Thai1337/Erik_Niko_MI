@@ -7,7 +7,7 @@ export default class RoomScene2 extends Phaser.Scene {
         })
         this.cursors = null;
         this.player = null;
-        console.log("dsfsafdsaf");
+        //console.log("dsfsafdsaf");
     }
     init() {
 
@@ -165,7 +165,7 @@ export default class RoomScene2 extends Phaser.Scene {
         this.physics.add.overlap(this.laserGroup, this.vplatfrom8, this.shootWall, null, this);
 
         this.collider6 = this.physics.add.overlap(this.laserGroup, this.box, this.shootWall, null, this);
-        console.log(this.collider6);
+        //console.log(this.collider6);
 
         this.physics.add.overlap(this.laserGroup, this.ground, this.shootWall, null, this);
         this.physics.add.overlap(this.laserGroup, this.leftwall, this.shootWall, null, this);

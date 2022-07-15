@@ -1,6 +1,7 @@
 import { CST } from "../CST.js";
 import eventsCenter from '../events/EventsCenter.js'
 export default class MenuScene extends Phaser.Scene {
+    counter = 0;
     constructor() {
         super({
             key: CST.SCENES.MENU
@@ -15,33 +16,45 @@ export default class MenuScene extends Phaser.Scene {
     create() {
         this.add.image(0, 0, "background").setOrigin(0)
         this.add.image(0, 0, "wall").setOrigin(0)
-        let playDoor = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 * 1.56, "Door");
-        playDoor.setScale(15)
+        this.playDoor = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 * 1.56, "Door");
+        this.playDoor.setScale(15)
         let playDoorOpen = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 * 1.56, "DoorOpen");
         playDoorOpen.setScale(15)
         playDoorOpen.setVisible(false);
-        playDoor.setInteractive();
+        this.playDoor.setInteractive();
 
-        playDoor.on("pointerover", () => {
+        this.playDoor.on("pointerover", () => {
             playDoorOpen.setVisible(true);
         })
-        playDoor.on("pointerout", () => {
-            console.log("OUT")
+        this.playDoor.on("pointerout", () => {
+            //console.log("OUT")
             playDoorOpen.setVisible(false);
         })
-        playDoor.on("pointerup", () => {
-            console.log("OPEN THE GATES")
-            this.scene.start(CST.SCENES.ROOM);
-        })
-        this.counter = 0;
-        eventsCenter.on('update-count', this.updateCount, this)
+        this.playDoor.on("pointerup", () => {
+            //console.log("OPEN THE GATES")
+            if(this.counter === 0) {
+                this.scene.start(CST.SCENES.ROOM);
+            }else if(this.counter === 1) {
+                this.scene.stop(CST.SCENES.ROOM);
+                this.scene.start(CST.SCENES.ROOM2);
 
-        this.text = this.add.text(200,400,this.counter,{font:"''"})
-        this.text.setFontSize(40)
+            }else if(this.counter === 2) {
+                this.scene.start(CST.SCENES.ROOM3);
+            }
+        })
+
+        //this.label = this.add.text(200,400, 'Level: o',{font:"''"});
+        //this.label.setFontSize(40);
+
+        eventsCenter.on('update-count', this.updateCount, this);
     }
 
-    updateCount() {
-        ++this.counter;
+    updateCount(count) {
+        this.counter = count;
+
+        console.log('Counter: ' + this.counter);
+
+        this.label = this.add.text(200,400,this.counter,{font:"''"});
     }
 
 }

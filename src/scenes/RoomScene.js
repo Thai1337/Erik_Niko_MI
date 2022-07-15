@@ -25,10 +25,13 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("laser", "../dist/assets/images/Laser.png");
+
     }
     create() {
-        this.count = 0
+        this.count = 1;
+        console.log(this.count);
+
+        eventsCenter.emit('update-count', this.count);
 
         this.laserGroup = new LaserGroup(this);
         //let platforms  = this.physics.add.staticGroup();
@@ -215,7 +218,7 @@ export default class RoomScene extends Phaser.Scene {
         }
 
         if (this.spaceBar.isDown) {
-            console.log("Space bar is down");
+            //console.log("Space bar is down");
             this.shootLaser();
         }
     }
@@ -268,7 +271,7 @@ export default class RoomScene extends Phaser.Scene {
         this.physics.add.overlap(this.laserGroup, this.vplatfrom8, this.shootWall, null, this);
 
         this.collider6 = this.physics.add.overlap(this.laserGroup, this.box, this.shootWall, null, this);
-        console.log(this.collider6);
+        //console.log(this.collider6);
 
         this.physics.add.overlap(this.laserGroup, this.ground, this.shootWall, null, this);
         this.physics.add.overlap(this.laserGroup, this.leftwall, this.shootWall, null, this);
@@ -287,11 +290,11 @@ export default class RoomScene extends Phaser.Scene {
 
         player.anims.play('turn');
 
-        console.log("HIT")
+        //console.log("HIT")
     }
 
     shootRobot (laser, robot) {
-        console.log("Treffer");
+        //console.log("Treffer");
 
         robot.disableBody(true, true);
 
@@ -303,7 +306,7 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     shootWall(laser, wall) {
-        console.log(" Wand");
+        //console.log(" Wand");
 
         wall.disableBody(true, true);
         wall.setActive(false);
@@ -324,7 +327,7 @@ export default class RoomScene extends Phaser.Scene {
         this.collider1.active = false;
         this.collider.active = false;
         this.box.destroy(true);
-        console.log("Collider 6 off")
+        //console.log("Collider 6 off")
 
         for (let i = 0; i < this.robotarray.length; i++) {
             this.collider3[i].active = false;
@@ -359,8 +362,6 @@ export default class RoomScene extends Phaser.Scene {
             //this.colliderPlayerDoor4.active = false;
             doorAnim.anims.play('doorAnim', true)
             //Pause
-            ++this.count
-            eventsCenter.emit('update-count', this.count)
             this.scene.start(CST.SCENES.MENU);
         }
         //if(this.Objective = true){
@@ -368,7 +369,7 @@ export default class RoomScene extends Phaser.Scene {
         //}
         }
     hitDiamant(){
-        console.log("HIT DIAMND");
+        //console.log("HIT DIAMND");
         this.diamant.visible = false;
         this.colliderPlayerDiamond5 = true;
     }
