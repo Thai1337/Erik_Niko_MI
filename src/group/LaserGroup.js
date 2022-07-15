@@ -7,7 +7,7 @@ export default class LaserGroup extends Phaser.Physics.Arcade.Group
         //this._leftShot = false;
         this.createMultiple({
             // This is the class we create just below
-            frameQuantity: 30, // Create 30 instances in the pool
+            frameQuantity: 1, // Create 30 instances in the pool
             active: false,
             visible: false,
             key: 'laser1',
