@@ -1,4 +1,5 @@
 import { CST } from "../CST.js";
+import eventsCenter from '../events/EventsCenter.js'
 export default class MenuScene extends Phaser.Scene {
     constructor() {
         super({
@@ -28,13 +29,19 @@ export default class MenuScene extends Phaser.Scene {
             console.log("OUT")
             playDoorOpen.setVisible(false);
         })
-
         playDoor.on("pointerup", () => {
             console.log("OPEN THE GATES")
             this.scene.start(CST.SCENES.ROOM);
         })
+        this.counter = 0;
+        eventsCenter.on('update-count', this.updateCount, this)
 
+        this.text = this.add.text(200,400,this.counter,{font:"''"})
+        this.text.setFontSize(40)
+    }
 
+    updateCount() {
+        ++this.counter;
     }
 
 }

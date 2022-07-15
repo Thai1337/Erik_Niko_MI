@@ -17,6 +17,7 @@ export default class RoomScene2 extends Phaser.Scene {
 
     }
     create() {
+        this.laserGroup = new LaserGroup(this);
         this.add.image(0, 0, "background").setOrigin(0)
         //Room
         this.ground = this.add.tileSprite(0, 1045 , 1920,32,"ground1").setOrigin(0).setScrollFactor(0);
@@ -132,6 +133,7 @@ export default class RoomScene2 extends Phaser.Scene {
 
             this.player.anims.play('left', true);
             this.player.flipX=true;
+            this.laserGroup.fireDirection(true);
         }
         else if (this.cursors.right.isDown)
         {
@@ -139,6 +141,7 @@ export default class RoomScene2 extends Phaser.Scene {
 
             this.player.anims.play('right', true);
             this.player.flipX=false;
+            this.laserGroup.fireDirection(false);
         }
         else
         {
@@ -156,6 +159,26 @@ export default class RoomScene2 extends Phaser.Scene {
             console.log("Space bar is down");
             this.shootLaser(this.player.flipX);
         }
+
+
+
+
+        this.physics.add.overlap(this.laserGroup, this.platfrom1, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platfrom2, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platfrom3, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platfrom4, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platfrom5, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platfrom6, this.shootWall, null, this);
+
+        this.physics.add.overlap(this.laserGroup, this.vplatfrom8, this.shootWall, null, this);
+
+        this.collider6 = this.physics.add.overlap(this.laserGroup, this.box, this.shootWall, null, this);
+        console.log(this.collider6);
+
+        this.physics.add.overlap(this.laserGroup, this.ground, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.leftwall, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.rightwall, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.roof, this.shootWall, null, this);
 
     }
     spawnDoor(player,doorAnim) {
@@ -196,6 +219,9 @@ export default class RoomScene2 extends Phaser.Scene {
         //if(this.Objective = true){
         // door.anims.play('doorAnim', true)
         //}
+    }
+    shootLaser(leftShot){
+        this.laserGroup.fireLaser(this.player.x, this.player.y);
     }
 
 }

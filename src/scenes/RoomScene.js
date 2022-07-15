@@ -1,5 +1,6 @@
 import { CST } from "../CST.js";
 import LaserGroup from "../group/LaserGroup.js";
+import eventsCenter from '../events/EventsCenter.js'
 export default class RoomScene extends Phaser.Scene {
 
 
@@ -24,9 +25,11 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     preload() {
-
+        this.load.image("laser", "../dist/assets/images/Laser.png");
     }
     create() {
+        this.count = 0
+
         this.laserGroup = new LaserGroup(this);
         //let platforms  = this.physics.add.staticGroup();
 
@@ -142,6 +145,7 @@ export default class RoomScene extends Phaser.Scene {
             frameRate: 10,
             repeat: 0
         });
+
 
 
         // Plattformen<
@@ -355,6 +359,8 @@ export default class RoomScene extends Phaser.Scene {
             //this.colliderPlayerDoor4.active = false;
             doorAnim.anims.play('doorAnim', true)
             //Pause
+            ++this.count
+            eventsCenter.emit('update-count', this.count)
             this.scene.start(CST.SCENES.MENU);
         }
         //if(this.Objective = true){
@@ -367,7 +373,8 @@ export default class RoomScene extends Phaser.Scene {
         this.colliderPlayerDiamond5 = true;
     }
 
-    shootLaser(leftShot){
+    shootLaser(){
         this.laserGroup.fireLaser(this.player.x, this.player.y);
+
     }
 }

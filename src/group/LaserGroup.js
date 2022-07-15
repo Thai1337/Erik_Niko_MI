@@ -7,7 +7,7 @@ export default class LaserGroup extends Phaser.Physics.Arcade.Group
         //this._leftShot = false;
         this.createMultiple({
             // This is the class we create just below
-            frameQuantity: 1, // Create 30 instances in the pool
+            frameQuantity: 30, // Create 30 instances in the pool
             active: false,
             visible: false,
             key: 'laser',
@@ -43,6 +43,7 @@ export default class LaserGroup extends Phaser.Physics.Arcade.Group
 class Laser extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y) {
         super(scene, x, y, 'laser');
+        scene.add.existing(this);
         this.setDepth(10);
         this.setScale(4)
         this.shootLeft = false;
@@ -62,12 +63,12 @@ class Laser extends Phaser.Physics.Arcade.Sprite {
     }*/
 
     fire(x, y) {
-        this.body.reset(x, y);
-        this.body.setAllowGravity(false);
-
         this.setActive(true);
         this.setVisible(true);
         this.enableBody();
+
+        this.body.reset(x, y);
+        this.body.setAllowGravity(false);
 
         if(this._leftShot) {
             console.log("LINKS SSSSS");
