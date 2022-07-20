@@ -14,7 +14,9 @@ export default class RoomScene extends Phaser.Scene {
         //this.Objective = true;
         this.robotarray = [];
         this.collider3 = [];
+        this.allcollider = [];
         this.laserGroup = null;
+        this.leben = 5;
 
     }
 
@@ -28,7 +30,7 @@ export default class RoomScene extends Phaser.Scene {
 
     }
     create() {
-        this.count = 1;
+        this.count = 2;
         console.log(this.count);
 
         eventsCenter.emit('update-count', this.count);
@@ -41,6 +43,12 @@ export default class RoomScene extends Phaser.Scene {
         // background
         this.add.image(0, 0, "background").setOrigin(0)
 
+        //herzen
+        this.herz1 = this.add.image(40,50, "heart").setOrigin(0).setScrollFactor(0);
+        this.herz2 = this.add.image(80,50, "heart").setOrigin(0).setScrollFactor(0);
+        this.herz3 = this.add.image(120,50, "heart").setOrigin(0).setScrollFactor(0);
+        this.herz4 = this.add.image(160,50, "heart").setOrigin(0).setScrollFactor(0);
+        this.herz5 = this.add.image(200,50, "heart").setOrigin(0).setScrollFactor(0);
         // raum
         this.ground = this.add.tileSprite(0, 1045 , 1920,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.ground,true);
@@ -221,6 +229,33 @@ export default class RoomScene extends Phaser.Scene {
             //console.log("Space bar is down");
             this.shootLaser();
         }
+        switch (this.leben) {
+            case 4:
+                this.herz5.setVisible(false);
+                break;
+            case 3:
+                this.herz5.setVisible(false);
+                this.herz4.setVisible(false);
+                break;
+            case 2:
+                this.herz5.setVisible(false);
+                this.herz4.setVisible(false);
+                this.herz3.setVisible(false);
+                break;
+            case 1:
+                this.herz5.setVisible(false);
+                this.herz4.setVisible(false);
+                this.herz3.setVisible(false);
+                this.herz2.setVisible(false);
+                break;
+            case 0:
+                this.herz5.setVisible(false);
+                this.herz4.setVisible(false);
+                this.herz3.setVisible(false);
+                this.herz2.setVisible(false);
+                this.herz1.setVisible(false);
+                break;
+        }
     }
 
     spawnRobot(player, robot){
@@ -256,7 +291,9 @@ export default class RoomScene extends Phaser.Scene {
             this.robotarray.push(robot);
             robot.anims.play('gegnerAnim',true);
 
-        this.physics.add.collider(this.player, robot, this.hitRobot, null, this);
+        this.colliderPlayerRobot7 = this.physics.add.collider(this.player, robot, this.hitRobot, null, this);
+
+        this.allcollider.push(this.colliderPlayerRobot7);
 
         this.physics.add.overlap(this.laserGroup, robot, this.shootRobot, null, this);
 
@@ -282,17 +319,33 @@ export default class RoomScene extends Phaser.Scene {
 
     }
 
-    hitRobot (player, robot)
-    {
-        this.physics.pause();
+    hitRobot (player, robot) {
+        if(this.leben <= 0 ){
+            this.physics.pause();
+            player.setTint(0xff0000);
+            player.anims.play('turn');
+        }else {
+            console.log("HIIHIHHIHIHIIHIHHIHI");
 
-        player.setTint(0xff0000);
-
-        player.anims.play('turn');
-
+            for (let i = 0; i < this.allcollider.length; i++) {
+                this.allcollider[i].active = false;
+            }
+            player.setTint(0x0088FF);
+            console.log(this.leben);
+            this.time.addEvent({
+                delay: 1500,
+                callback: ()=>{
+                    this.leben--;
+                    for (let i = 0; i < this.allcollider.length; i++) {
+                        this.allcollider[i].active = true;
+                    }
+                    player.setTint(0xffffff);
+                },
+                loop: false
+            });
+        }
         //console.log("HIT")
     }
-
     shootRobot (laser, robot) {
         //console.log("Treffer");
 
@@ -362,7 +415,14 @@ export default class RoomScene extends Phaser.Scene {
             //this.colliderPlayerDoor4.active = false;
             doorAnim.anims.play('doorAnim', true)
             //Pause
-            this.scene.start(CST.SCENES.MENU);
+            this.time.addEvent({
+                delay: 400,
+                callback: ()=>{
+                    eventsCenter.emit('update-heart', this.leben);
+                    this.scene.start(CST.SCENES.MENU);
+                },
+                loop: false
+            });
         }
         //if(this.Objective = true){
            // door.anims.play('doorAnim', true)

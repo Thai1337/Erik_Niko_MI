@@ -1,5 +1,6 @@
 import { CST } from "../CST.js";
 import LaserGroup from "../group/LaserGroup.js";
+import eventsCenter from "../events/EventsCenter.js";
 export default class RoomScene2 extends Phaser.Scene {
     constructor() {
         super({
@@ -10,15 +11,23 @@ export default class RoomScene2 extends Phaser.Scene {
         console.log("dsfsafdsaf");
     }
 
-    init() {
-
+    init (data) {
+        this.leben = data.leben
+        console.log("INIT IST DA" + this.leben);
     }
     preload() {
 
     }
     create() {
+
         this.laserGroup = new LaserGroup(this);
         this.add.image(0, 0, "background").setOrigin(0)
+        //herzen
+        this.herz1 = this.add.image(40,50, "heart").setOrigin(0).setScrollFactor(0);
+        this.herz2 = this.add.image(80,50, "heart").setOrigin(0).setScrollFactor(0);
+        this.herz3 = this.add.image(120,50, "heart").setOrigin(0).setScrollFactor(0);
+        this.herz4 = this.add.image(160,50, "heart").setOrigin(0).setScrollFactor(0);
+        this.herz5 = this.add.image(200,50, "heart").setOrigin(0).setScrollFactor(0);
         //Room
         this.ground = this.add.tileSprite(0, 1045 , 1920,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.ground,true);
@@ -159,10 +168,33 @@ export default class RoomScene2 extends Phaser.Scene {
             console.log("Space bar is down");
             this.shootLaser(this.player.flipX);
         }
-
-
-
-
+        switch (this.leben) {
+            case 4:
+                this.herz5.setVisible(false);
+                break;
+            case 3:
+                this.herz5.setVisible(false);
+                this.herz4.setVisible(false);
+                break;
+            case 2:
+                this.herz5.setVisible(false);
+                this.herz4.setVisible(false);
+                this.herz3.setVisible(false);
+                break;
+            case 1:
+                this.herz5.setVisible(false);
+                this.herz4.setVisible(false);
+                this.herz3.setVisible(false);
+                this.herz2.setVisible(false);
+                break;
+            case 0:
+                this.herz5.setVisible(false);
+                this.herz4.setVisible(false);
+                this.herz3.setVisible(false);
+                this.herz2.setVisible(false);
+                this.herz1.setVisible(false);
+                break;
+        }
         this.physics.add.overlap(this.laserGroup, this.platfrom1, this.shootWall, null, this);
         this.physics.add.overlap(this.laserGroup, this.platfrom2, this.shootWall, null, this);
         this.physics.add.overlap(this.laserGroup, this.platfrom3, this.shootWall, null, this);
@@ -190,11 +222,17 @@ export default class RoomScene2 extends Phaser.Scene {
 
     hitDoor(player, doorAnim){
         //doorAnim.setPosition(992-64, 440-128-56)
-        if(this.colliderPlayerDiamond5 == true) {
+        if(true) {
             //this.colliderPlayerDoor4.active = false;
             doorAnim.anims.play('doorAnim', true)
+            this.time.addEvent({
+                delay: 400,
+                callback: ()=>{
+                    this.scene.start(CST.SCENES.MENU);
+                },
+                loop: false
+            });
             //Pause
-            this.scene.start(CST.SCENES.MENU);
         }
         //if(this.Objective = true){
         // door.anims.play('doorAnim', true)

@@ -1,6 +1,7 @@
 import { CST } from "../CST.js";
 import eventsCenter from '../events/EventsCenter.js'
 export default class MenuScene extends Phaser.Scene {
+
     counter = 1;
     label;
     constructor() {
@@ -37,10 +38,13 @@ export default class MenuScene extends Phaser.Scene {
                 this.scene.start(CST.SCENES.ROOM);
             }else if(this.counter === 2) {
                 this.scene.stop(CST.SCENES.ROOM);
-                this.scene.start(CST.SCENES.ROOM2);
+                this.scene.start(CST.SCENES.ROOM2,{leben: this.leben});
+                //eventsCenter.emit('lebenZuRaum2', this.leben);
+                console.log("wird gestartet")
 
             }else if(this.counter === 3) {
-                this.scene.start(CST.SCENES.ROOM3);
+                this.scene.stop(CST.SCENES.ROOM2);
+                this.scene.start(CST.SCENES.ROOM3,{leben: this.leben});
             }
         })
 
@@ -50,15 +54,21 @@ export default class MenuScene extends Phaser.Scene {
 
         eventsCenter.on('update-count', this.updateCount, this);
 
-        this.label = this.add.text(200,400, 'Level: ' + this.counter,{font:"''"});
+        eventsCenter.on('update-heart', this.updateLeben, this);
+
+        this.label = this.add.text(200,400, 'LEVEL: ' + this.counter,{fontFamily:'dirtyoldtown'});
         this.label.setFontSize(40);
     }
 
     updateCount(count) {
-        this.counter++;
-
+        this.counter = count;
         console.log('Counter: ' + this.counter);
+    }
 
+    updateLeben(leben) {
+        console.log("YYYYYYYYYYYYYYYYYYYYYY",leben);
+        this.leben = leben;
+        eventsCenter.emit('lebenZuRaum2', leben);
     }
 
 }

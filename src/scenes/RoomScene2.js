@@ -1,5 +1,6 @@
 import { CST } from "../CST.js";
 import LaserGroup from "../group/LaserGroup.js";
+import eventsCenter from "../events/EventsCenter.js";
 export default class RoomScene2 extends Phaser.Scene {
     constructor() {
         super({
@@ -8,16 +9,34 @@ export default class RoomScene2 extends Phaser.Scene {
         this.cursors = null;
         this.player = null;
         //console.log("dsfsafdsaf");
+        //this.Objective = true;
+        this.robotarray = [];
+        this.allcollider = [];
+        this.laserGroup = null;
     }
-    init() {
-
+    init (data) {
+        this.leben = data.leben
+        console.log("INIT IST DA" + this.leben);
     }
     preload() {
 
     }
     create() {
+        this.count = 3;
+        //console.log(this.count);
+
+        eventsCenter.emit('update-count', this.count);
+
+        //eventsCenter.on('lebenZuRaum2', this.getLeben, this);
+
         this.laserGroup = new LaserGroup(this);
         this.add.image(0, 0, "background").setOrigin(0)
+        //herzen
+        this.herz1 = this.add.image(40,50, "heart").setOrigin(0).setScrollFactor(0);
+        this.herz2 = this.add.image(80,50, "heart").setOrigin(0).setScrollFactor(0);
+        this.herz3 = this.add.image(120,50, "heart").setOrigin(0).setScrollFactor(0);
+        this.herz4 = this.add.image(160,50, "heart").setOrigin(0).setScrollFactor(0);
+        this.herz5 = this.add.image(200,50, "heart").setOrigin(0).setScrollFactor(0);
         //Room
         this.ground = this.add.tileSprite(0, 1045 , 1920,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.ground,true);
@@ -88,14 +107,14 @@ export default class RoomScene2 extends Phaser.Scene {
                 frameRate: 10,
                 repeat: -1
             });
-        /*
+
         this.anims.create({
             key: 'gegnerAnim',
             frames: this.anims.generateFrameNumbers('robot', { start: 0, end: 8 }),
             frameRate: 10,
             repeat: -1
         });
-         */
+
 
         this.anims.create({
             key: 'doorAnim',
@@ -116,6 +135,13 @@ export default class RoomScene2 extends Phaser.Scene {
         this.physics.add.collider(this.player, this.roof);
 
         this.spawnDoor(this.player, "doorAnim");
+
+        this.spawnRobot(this.player, "robot", 1400, 600);
+        this.spawnRobot(this.player, "robot", 1200, 650);
+        this.spawnRobot(this.player, "robot", 1000, 500);
+
+
+        this.spawnRobot(this.player, "robot", 200, 100);
     }
     update ()
     {
@@ -152,26 +178,147 @@ export default class RoomScene2 extends Phaser.Scene {
             this.shootLaser();
         }
 
+        for (let i = 0; i < this.robotarray.length; i++) {
+
+            if(this.player.x < this.robotarray[i].x) {
+                //this.robotarray[i].x -= 1.5;
+                this.robotarray[i].setVelocityX(-Phaser.Math.Between(0, 300));
+            }else {
+                this.robotarray[i].setVelocityX(Phaser.Math.Between(0, 300));
+                //this.robotarray[i].x += 1.5;
+            }
+            if (this.player.y < this.robotarray[i].y){
+                this.robotarray[i].setVelocityY(-Phaser.Math.Between(0, 300));
+            }
+            else {
+                this.robotarray[i].setVelocityY(Phaser.Math.Between(0, 300));
+                //this.robotarray[i].x += 1.5;
+            }
+            switch (this.leben) {
+                case 4:
+                    this.herz5.setVisible(false);
+                    break;
+                case 3:
+                    this.herz5.setVisible(false);
+                    this.herz4.setVisible(false);
+                    break;
+                case 2:
+                    this.herz5.setVisible(false);
+                    this.herz4.setVisible(false);
+                    this.herz3.setVisible(false);
+                    break;
+                case 1:
+                    this.herz5.setVisible(false);
+                    this.herz4.setVisible(false);
+                    this.herz3.setVisible(false);
+                    this.herz2.setVisible(false);
+                    break;
+                case 0:
+                    this.herz5.setVisible(false);
+                    this.herz4.setVisible(false);
+                    this.herz3.setVisible(false);
+                    this.herz2.setVisible(false);
+                    this.herz1.setVisible(false);
+                    break;
+            }
+
+            /*if(this.player.y < this.robotarray[i].y) {
+                //this.robotarray[i].y -= 2;
+            }
+            if(this.player.y > this.robotarray[i].y){
+                //this.robotarray[i].y += 1;
+            }*/
 
 
+            //const rotation = Phaser.Math.Angle.Between(this.robotarray[i].x, this.robotarray[i].y, this.player.x , this.player.y);
 
-        this.physics.add.overlap(this.laserGroup, this.platfrom1, this.shootWall, null, this);
-        this.physics.add.overlap(this.laserGroup, this.platfrom2, this.shootWall, null, this);
-        this.physics.add.overlap(this.laserGroup, this.platfrom3, this.shootWall, null, this);
-        this.physics.add.overlap(this.laserGroup, this.platfrom4, this.shootWall, null, this);
-        this.physics.add.overlap(this.laserGroup, this.platfrom5, this.shootWall, null, this);
-        this.physics.add.overlap(this.laserGroup, this.platfrom6, this.shootWall, null, this);
+            //this.robotarray[i].setRotation(rotation);
+            //console.log(this.collider3[i]);
+        }
 
-        this.physics.add.overlap(this.laserGroup, this.vplatfrom8, this.shootWall, null, this);
 
-        this.collider6 = this.physics.add.overlap(this.laserGroup, this.box, this.shootWall, null, this);
+        /*this.physics.add.overlap(this.laserGroup, this.platformUnterDoor, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformVorKorridor, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformZzRechts0, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformZzLinks0, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformZzRechts1, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformZzLinks1, this.shootWall, null, this);*/
+
+        //this.physics.add.overlap(this.laserGroup, this.vplatfrom8, this.shootWall, null, this);
+
+        //this.collider6 = this.physics.add.overlap(this.laserGroup, this.box, this.shootWall, null, this);
+        //console.log(this.collider6);
+
+        /*this.physics.add.overlap(this.laserGroup, this.ground, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.leftwall, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.rightwall, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.roof, this.shootWall, null, this);
+        */
+    }
+
+
+    spawnRobot(player, robot, xSpawn, ySpawn){
+        //robot = this.robots.create(800, 100, 'robot');
+        robot = this.physics.add.sprite(xSpawn, ySpawn, 'robot');
+        robot.setSize(12,20)
+        robot.setOffset(5,15)
+        robot.setBounce(1);
+        robot.setCollideWorldBounds(true);
+        robot.setVelocity(Phaser.Math.Between(0, 400), 20);
+        robot.setScale(4)
+
+        this.physics.add.overlap(this.laserGroup, robot, this.hitStars, null, this );
+
+        this.physics.add.collider(robot, this.platformUnterDoor);
+        this.physics.add.collider(robot, this.platformVorKorridor);
+        this.physics.add.collider(robot, this.platformZzRechts0);
+        this.physics.add.collider(robot, this.platformZzLinks0);
+        this.physics.add.collider(robot, this.platformZzRechts1);
+        this.physics.add.collider(robot, this.platformZzLinks1);
+
+        let colliderTest = this.physics.add.collider(robot, this.box);
+
+
+        //this.physics.add.collider(robot, this.vplatfrom8);
+
+        this.collider1 = this.physics.add.collider(robot, this.ground);
+        this.physics.add.collider(robot, this.leftwall);
+        this.physics.add.collider(robot, this.rightwall);
+        this.physics.add.collider(robot, this.roof);
+
+
+        this.robotarray.push(robot);
+        robot.anims.play('gegnerAnim',true);
+
+        this.collider2 =this.physics.add.collider(this.player, robot, this.hitRobot, null, this);
+
+        this.allcollider.push(this.collider2);
+
+        this.physics.add.overlap(this.laserGroup, robot, this.shootRobot, null, this);
+
+
+        this.physics.add.overlap(this.laserGroup, this.platformUnterDoor, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformVorKorridor, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformZzRechts0, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformZzLinks0, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformZzRechts1, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformZzLinks1, this.shootWall, null, this);
+
+        //this.physics.add.overlap(this.laserGroup, this.vplatfrom8, this.shootWall, null, this);
+
+        //this.collider6 = this.physics.add.overlap(this.laserGroup, this.box, this.shootWall, null, this);
         //console.log(this.collider6);
 
         this.physics.add.overlap(this.laserGroup, this.ground, this.shootWall, null, this);
         this.physics.add.overlap(this.laserGroup, this.leftwall, this.shootWall, null, this);
         this.physics.add.overlap(this.laserGroup, this.rightwall, this.shootWall, null, this);
         this.physics.add.overlap(this.laserGroup, this.roof, this.shootWall, null, this);
+
+
+
     }
+
+
     spawnDoor(player,doorAnim) {
         doorAnim = this.physics.add.staticSprite(128, 440-128-56, "doorAnim");
         doorAnim.setSize(32*4,32*4)
@@ -185,11 +332,18 @@ export default class RoomScene2 extends Phaser.Scene {
 
     hitDoor(player, doorAnim){
         doorAnim.setPosition(128, 440-128-56)
-        if(this.colliderPlayerDiamond5 == true) {
+        if(true) {
             //this.colliderPlayerDoor4.active = false;
             doorAnim.anims.play('doorAnim', true)
+            this.time.addEvent({
+                delay: 500,
+                callback: ()=>{
+                    eventsCenter.emit('update-heart', this.leben);
+                    this.scene.start(CST.SCENES.MENU,);
+                },
+                loop: false
+            });
             //Pause
-            this.scene.start(CST.SCENES.MENU);
         }
         //if(this.Objective = true){
         // door.anims.play('doorAnim', true)
@@ -199,4 +353,59 @@ export default class RoomScene2 extends Phaser.Scene {
         this.laserGroup.fireLaser(this.player.x, this.player.y);
     }
 
+    hitRobot (player, robot) {
+        if(this.leben <= 0 ){
+            this.physics.pause();
+            player.setTint(0xff0000);
+            player.anims.play('turn');
+        }else {
+            console.log("HIIHIHHIHIHIIHIHHIHI");
+
+            for (let i = 0; i < this.allcollider.length; i++) {
+                this.allcollider[i].active = false;
+            }
+            player.setTint(0x0088FF);
+            console.log(this.leben);
+            this.time.addEvent({
+                delay: 400,
+                callback: ()=>{
+                    this.leben--;
+                    for (let i = 0; i < this.allcollider.length; i++) {
+                        this.allcollider[i].active = true;
+                    }
+                    player.setTint(0xffffff);
+                    },
+                loop: false
+
+            });
+        }
+        //console.log("HIT")
+    }
+
+    shootRobot (laser, robot) {
+        //console.log("Treffer");
+
+        robot.disableBody(true, true);
+
+        laser.disableBody(true, true);
+        laser.setActive(false);
+        laser.setVisible(false);
+
+        //laser.destroy(true);
+    }
+
+    shootWall(laser, wall) {
+        //console.log(" Wand");
+
+        wall.disableBody(true, true);
+        wall.setActive(false);
+        wall.setVisible(false);
+
+        //wall.destroy(true);
+    }/*
+    getLeben(leben) {
+        console.log("ZZZZZZZZZZZZZZZZ"+leben);
+        this.leben = leben;
+    }
+*/
 }
