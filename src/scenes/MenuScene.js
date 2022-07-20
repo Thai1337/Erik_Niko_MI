@@ -4,6 +4,8 @@ export default class MenuScene extends Phaser.Scene {
 
     counter = 1;
     label;
+    click = 0;
+    startLeben = 5;
     constructor() {
         super({
             key: CST.SCENES.MENU
@@ -35,7 +37,7 @@ export default class MenuScene extends Phaser.Scene {
         this.playDoor.on("pointerup", () => {
             //console.log("OPEN THE GATES")
             if(this.counter === 1) {
-                this.scene.start(CST.SCENES.ROOM);
+                this.scene.start(CST.SCENES.ROOM,{leben: this.startLeben});
             }else if(this.counter === 2) {
                 this.scene.stop(CST.SCENES.ROOM);
                 this.scene.start(CST.SCENES.ROOM2,{leben: this.leben});
@@ -50,14 +52,54 @@ export default class MenuScene extends Phaser.Scene {
 
 
 
+        if (this.counter === 1) {
+            this.heart1 = this.add.image(1500,475,"heart");
+            this.heart2 = this.add.image(1550,475,"heart");
+            this.heart3 = this.add.image(1600,475,"heart");
+            this.heart4 =this.add.image(1650,475,"heart");
+            this.heart5 =this.add.image(1700,475,"heart");
+
+            this.heart1.setVisible(true)
+            this.heart2.setVisible(true);
+            this.heart3.setVisible(true);
+            this.heart4.setVisible(true);
+            this.heart5.setVisible(true);
+
+            this.difficulty = this.add.text(1490, 400, "Schwierigkeit",{fontFamily:'dirtyoldtown',fontSize:40})
+            this.difficulty.setInteractive();
+            this.difficulty.on("pointerup",()=>{
+                this.click++
+                if (this.click === 1){
+                    this.heart4.setVisible(false)
+                    this.heart5.setVisible(false);
+                    this.startLeben = 3;
+                }
+                if (this.click === 2){
+                    this.heart2.setVisible(false);
+                    this.heart3.setVisible(false);
+                    this.startLeben = 1;
+                }
+                if (this.click === 3){
+                    this.startLeben = 5;
+                    this.heart1.setVisible(true)
+                    this.heart2.setVisible(true);
+                    this.heart3.setVisible(true);
+                    this.heart4.setVisible(true);
+                    this.heart5.setVisible(true);
+                    this.click = 0
+                }
+
+            })
+
+        }
+
 
 
         eventsCenter.on('update-count', this.updateCount, this);
 
         eventsCenter.on('update-heart', this.updateLeben, this);
 
-        this.label = this.add.text(200,400, 'LEVEL: ' + this.counter,{fontFamily:'dirtyoldtown'});
-        this.label.setFontSize(40);
+        this.label = this.add.text(200,400, 'LEVEL: ' + this.counter,{fontFamily:'dirtyoldtown',fontSize:40});
     }
 
     updateCount(count) {

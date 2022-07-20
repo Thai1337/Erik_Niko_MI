@@ -16,14 +16,14 @@ export default class RoomScene extends Phaser.Scene {
         this.collider3 = [];
         this.allcollider = [];
         this.laserGroup = null;
-        this.leben = 5;
 
     }
 
 
 
-    init() {
-
+    init(data) {
+        this.leben = data.leben
+        console.log("INIT IST DA" + this.leben);
     }
 
     preload() {
@@ -35,7 +35,7 @@ export default class RoomScene extends Phaser.Scene {
 
         eventsCenter.emit('update-count', this.count);
 
-        this.laserGroup = new LaserGroup(this);
+
         //let platforms  = this.physics.add.staticGroup();
 
         //platforms.create(0, 1080, 'boden').setScale(10).refreshBody();
@@ -68,6 +68,12 @@ export default class RoomScene extends Phaser.Scene {
 
         this.platfrom2 = this.add.tileSprite(800-32, 600 , 320+64,32,"ground3").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platfrom2, true)
+
+
+
+        this.laserGroup = new LaserGroup(this);
+
+
 
         this.platfrom3 = this.add.tileSprite(860, 400 , 192,32,"ground3").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platfrom3, true)
@@ -191,6 +197,10 @@ export default class RoomScene extends Phaser.Scene {
         this.spawnRobot(this.player, "robot");
         this.spawnHebel(this.player, "hebel");
         this.spawnDoor(this.player, "doorAnim");
+
+
+
+        this.objective = this.add.text(1400,50, 'Objective: pull the Lever',{fontFamily:'dirtyoldtown',fontSize:25})
     }
 
     update ()
@@ -320,7 +330,8 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     hitRobot (player, robot) {
-        if(this.leben <= 0 ){
+        if(this.leben <= 1 ){
+            this.herz1.setVisible(false);
             this.physics.pause();
             player.setTint(0xff0000);
             player.anims.play('turn');
@@ -331,11 +342,11 @@ export default class RoomScene extends Phaser.Scene {
                 this.allcollider[i].active = false;
             }
             player.setTint(0x0088FF);
-            console.log(this.leben);
+            console.log(this.leben);                    --this.leben;
+
             this.time.addEvent({
                 delay: 1500,
                 callback: ()=>{
-                    this.leben--;
                     for (let i = 0; i < this.allcollider.length; i++) {
                         this.allcollider[i].active = true;
                     }
@@ -343,6 +354,7 @@ export default class RoomScene extends Phaser.Scene {
                 },
                 loop: false
             });
+            console.log(this.leben)
         }
         //console.log("HIT")
     }
@@ -389,6 +401,7 @@ export default class RoomScene extends Phaser.Scene {
 
         this.box.visible = false;
         hebel.anims.play('animHebel', true)
+        this.objective.setText("Objective: collect the diamond");
     }
 
 
@@ -432,6 +445,7 @@ export default class RoomScene extends Phaser.Scene {
         //console.log("HIT DIAMND");
         this.diamant.visible = false;
         this.colliderPlayerDiamond5 = true;
+        this.objective.setText("Objective: get through the door");
     }
 
     shootLaser(){

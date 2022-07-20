@@ -20,8 +20,9 @@ export default class RoomScene2 extends Phaser.Scene {
     }
     create() {
 
-        this.laserGroup = new LaserGroup(this);
+
         this.add.image(0, 0, "background").setOrigin(0)
+        this.laserGroup = new LaserGroup(this);
         //herzen
         this.herz1 = this.add.image(40,50, "heart").setOrigin(0).setScrollFactor(0);
         this.herz2 = this.add.image(80,50, "heart").setOrigin(0).setScrollFactor(0);
@@ -133,6 +134,8 @@ export default class RoomScene2 extends Phaser.Scene {
 
         this.spawnDoor(this.player, "doorAnim");
         this.spawnPortal(this.player,"portalAnim","portalAnim");
+        this.objective = this.add.text(1400,50, 'Objective: Have FUN!',{fontFamily:'dirtyoldtown',fontSize:25})
+
     }
     update ()
     {

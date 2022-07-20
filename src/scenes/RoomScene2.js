@@ -23,14 +23,12 @@ export default class RoomScene2 extends Phaser.Scene {
     }
     create() {
         this.count = 3;
+        this.killCount = 0;
         //console.log(this.count);
-
         eventsCenter.emit('update-count', this.count);
-
         //eventsCenter.on('lebenZuRaum2', this.getLeben, this);
-
-        this.laserGroup = new LaserGroup(this);
         this.add.image(0, 0, "background").setOrigin(0)
+        this.laserGroup = new LaserGroup(this);
         //herzen
         this.herz1 = this.add.image(40,50, "heart").setOrigin(0).setScrollFactor(0);
         this.herz2 = this.add.image(80,50, "heart").setOrigin(0).setScrollFactor(0);
@@ -142,6 +140,10 @@ export default class RoomScene2 extends Phaser.Scene {
 
 
         this.spawnRobot(this.player, "robot", 200, 100);
+
+
+        this.objective = this.add.text(1400,50, 'Objective: Kill ' + this.killCount + " of 4",{fontFamily:'dirtyoldtown',fontSize:25})
+
     }
     update ()
     {
@@ -332,7 +334,7 @@ export default class RoomScene2 extends Phaser.Scene {
 
     hitDoor(player, doorAnim){
         doorAnim.setPosition(128, 440-128-56)
-        if(true) {
+        if(this.killCount === 4) {
             //this.colliderPlayerDoor4.active = false;
             doorAnim.anims.play('doorAnim', true)
             this.time.addEvent({
@@ -354,36 +356,40 @@ export default class RoomScene2 extends Phaser.Scene {
     }
 
     hitRobot (player, robot) {
-        if(this.leben <= 0 ){
-            this.physics.pause();
-            player.setTint(0xff0000);
-            player.anims.play('turn');
-        }else {
-            console.log("HIIHIHHIHIHIIHIHHIHI");
+    if(this.leben <= 1 ){
+        this.herz1.setVisible(false);
+        this.physics.pause();
+        player.setTint(0xff0000);
+        player.anims.play('turn');
+    }else {
+        console.log("HIIHIHHIHIHIIHIHHIHI");
 
-            for (let i = 0; i < this.allcollider.length; i++) {
-                this.allcollider[i].active = false;
-            }
-            player.setTint(0x0088FF);
-            console.log(this.leben);
-            this.time.addEvent({
-                delay: 400,
-                callback: ()=>{
-                    this.leben--;
-                    for (let i = 0; i < this.allcollider.length; i++) {
-                        this.allcollider[i].active = true;
-                    }
-                    player.setTint(0xffffff);
-                    },
-                loop: false
-
-            });
+        for (let i = 0; i < this.allcollider.length; i++) {
+            this.allcollider[i].active = false;
         }
-        //console.log("HIT")
+        player.setTint(0x0088FF);
+        console.log(this.leben);                    --this.leben;
+
+        this.time.addEvent({
+            delay: 1500,
+            callback: ()=>{
+                for (let i = 0; i < this.allcollider.length; i++) {
+                    this.allcollider[i].active = true;
+                }
+                player.setTint(0xffffff);
+            },
+            loop: false
+        });
+        console.log(this.leben)
     }
+    //console.log("HIT")
+}
 
     shootRobot (laser, robot) {
         //console.log("Treffer");
+
+        this.killCount++;
+        this.objective.setText('Objective: Kill ' + this.killCount + " of 4");
 
         robot.disableBody(true, true);
 
