@@ -6,9 +6,15 @@ export default class RoomScene2 extends Phaser.Scene {
         super({
             key: CST.SCENES.ROOM3
         })
+        this.robotarray = [];
+        this.bossarray = [];
         this.cursors = null;
         this.player = null;
+        this.allcollider = [];
+        this.bossTod = false;
+        this.zeit = 0;
         console.log("dsfsafdsaf");
+        console.log(this.zeit)
     }
 
     init (data) {
@@ -43,24 +49,25 @@ export default class RoomScene2 extends Phaser.Scene {
         this.roof = this.add.tileSprite(0, 0 , 1920,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.roof,true);
         //Platforms
-        this.platformUnterDoor = this.add.tileSprite(32, 320 , 1920-64,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platformUnterDoor = this.add.tileSprite(32, 320 , 1920-64,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platformUnterDoor, true)
 
-        this.platformTreppe0 = this.add.tileSprite(256, 896 , 256-64,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platformTreppe0 = this.add.tileSprite(256, 896 , 256-64,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platformTreppe0, true)
 
-        this.platformTreppe1 = this.add.tileSprite(256*3-64, 736 , 256-64,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platformTreppe1 = this.add.tileSprite(256*3-64, 736 , 256-64,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platformTreppe1, true)
 
-        this.platformTreppe2 = this.add.tileSprite(256*5-128, 608 , 256-64,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platformTreppe2 = this.add.tileSprite(256*5-128, 608 , 256-64,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platformTreppe2, true)
 
-        this.platformTreppe3 = this.add.tileSprite(256*6-64, 512 , 256-64,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platformTreppe3 = this.add.tileSprite(256*6-64, 512 , 256-64,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platformTreppe3, true)
 
-        this.platformVorKorridor = this.add.tileSprite(256*6+128, 320+128+64 , 32,640-32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platformVorKorridor = this.add.tileSprite(256*6+128, 320+128+64 , 32,640-32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platformVorKorridor, true)
-
+        this.ziel = this.platformDoor = this.add.tileSprite(256*6-64+7*32, 512-128-32 , 32,+128+32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.physics.add.existing(this.platformDoor, true)
         //input
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -100,20 +107,25 @@ export default class RoomScene2 extends Phaser.Scene {
                 frameRate: 10,
                 repeat: -1
             });
-        /*
+
         this.anims.create({
-            key: 'gegnerAnim',
-            frames: this.anims.generateFrameNumbers('robot', { start: 0, end: 8 }),
+            key: 'gegnerAnim3',
+            frames: this.anims.generateFrameNumbers('robot', { start: 48, end: 48+7 }),
             frameRate: 10,
             repeat: -1
         });
-         */
 
         this.anims.create({
             key: 'doorAnim',
             frames: this.anims.generateFrameNumbers('doorAnim', { start: 0, end: 3 }),
             frameRate: 10,
             repeat: 0
+        });
+        this.anims.create({
+            key: 'gegnerAnim2',
+            frames: this.anims.generateFrameNumbers('robot', { start: 7, end: 15 }),
+            frameRate: 10,
+            repeat: -1
         });
         this.anims.create({
             key: 'portalAnim',
@@ -127,6 +139,7 @@ export default class RoomScene2 extends Phaser.Scene {
         this.physics.add.collider(this.player, this.platformTreppe2);
         this.physics.add.collider(this.player, this.platformTreppe3);
         this.physics.add.collider(this.player, this.platformVorKorridor);
+        this.physics.add.collider(this.player, this.platformDoor);
         //raum
         this.physics.add.collider(this.player, this.ground);
         this.physics.add.collider(this.player, this.leftwall);
@@ -136,6 +149,7 @@ export default class RoomScene2 extends Phaser.Scene {
         this.spawnDoor(this.player, "doorAnim");
         this.spawnPortal(this.player,"portalAnim","portalAnim");
         this.objective = this.add.text(1400,50, 'Objective: Have FUN!',{fontFamily:'dirtyoldtown',fontSize:25})
+        this.spawnBoss(this.player, "robot", 200, 100);
 
     }
     update ()
@@ -172,6 +186,41 @@ export default class RoomScene2 extends Phaser.Scene {
             console.log("Space bar is down");
             this.shootLaser(this.player.flipX);
         }
+        for (let i = 0; i < this.robotarray.length; i++) {
+
+            if (this.player.x < this.robotarray[i].x) {
+                //this.robotarray[i].x -= 1.5;
+                this.robotarray[i].setVelocityX(-Phaser.Math.Between(0, 300));
+            } else {
+                this.robotarray[i].setVelocityX(Phaser.Math.Between(0, 300));
+                //this.robotarray[i].x += 1.5;
+            }
+            if (this.player.y < this.robotarray[i].y) {
+                this.robotarray[i].setVelocityY(-Phaser.Math.Between(0, 300));
+            } else {
+                this.robotarray[i].setVelocityY(Phaser.Math.Between(0, 300));
+                //this.robotarray[i].x += 1.5;
+            }
+        }
+
+        for (let i = 0; i < this.bossarray.length; i++) {
+
+            if (this.player.x < this.bossarray[i].x) {
+                //this.robotarray[i].x -= 1.5;
+                this.bossarray[i].setVelocityX(-Phaser.Math.Between(0, 300));
+            } else {
+                this.bossarray[i].setVelocityX(Phaser.Math.Between(0, 300));
+                //this.robotarray[i].x += 1.5;
+            }
+        }
+            if(this.zeit == 500) {
+                if (this.bossTod == false) {
+                    this.spawnRobot(this.player, this.robot, this.bossarray[0].x, this.bossarray[0].y)
+                    this.zeit = 0
+                }
+            }
+            console.log(this.zeit)
+            this.zeit += 1
         switch (this.leben) {
             case 4:
                 this.herz5.setVisible(false);
@@ -199,7 +248,8 @@ export default class RoomScene2 extends Phaser.Scene {
                 this.herz1.setVisible(false);
                 break;
         }
-        this.physics.add.overlap(this.laserGroup, this.platfrom1, this.shootWall, null, this);
+
+        /*this.physics.add.overlap(this.laserGroup, this.platfrom1, this.shootWall, null, this);
         this.physics.add.overlap(this.laserGroup, this.platfrom2, this.shootWall, null, this);
         this.physics.add.overlap(this.laserGroup, this.platfrom3, this.shootWall, null, this);
         this.physics.add.overlap(this.laserGroup, this.platfrom4, this.shootWall, null, this);
@@ -214,7 +264,7 @@ export default class RoomScene2 extends Phaser.Scene {
         this.physics.add.overlap(this.laserGroup, this.ground, this.shootWall, null, this);
         this.physics.add.overlap(this.laserGroup, this.leftwall, this.shootWall, null, this);
         this.physics.add.overlap(this.laserGroup, this.rightwall, this.shootWall, null, this);
-        this.physics.add.overlap(this.laserGroup, this.roof, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.roof, this.shootWall, null, this);*/
 
     }
     spawnDoor(player,doorAnim) {
@@ -232,6 +282,7 @@ export default class RoomScene2 extends Phaser.Scene {
             this.time.addEvent({
                 delay: 400,
                 callback: ()=>{
+                    this.sound.stopAll();
                     this.scene.start(CST.SCENES.MENU);
                 },
                 loop: false
@@ -262,8 +313,206 @@ export default class RoomScene2 extends Phaser.Scene {
         // door.anims.play('doorAnim', true)
         //}
     }
-    shootLaser(leftShot){
+    shootLaser(){
         this.laserGroup.fireLaser(this.player.x, this.player.y);
+    }
+    spawnBoss(player, boss){
+
+        //robot = this.robots.create(800, 100, 'robot');
+        boss = this.physics.add.sprite(1600, 450, 'robot');
+        boss.setSize(12,20)
+        boss.setOffset(5,15)
+        //robot.setBounce(1);
+        boss.setCollideWorldBounds(true);
+        //robot.setVelocity(Phaser.Math.Between(0, 400), 20);
+        boss.setScale(5);
+        boss.y = 400;
+        boss.body.setAllowGravity(false);
+
+        this.physics.add.overlap(this.laserGroup, boss, this.hitStars, null, this );
+
+        this.physics.add.collider(boss, this.platformVorKorridor);
+        this.physics.add.collider(boss, this.platformTreppe0);
+        this.physics.add.collider(boss, this.platformTreppe1);
+        this.physics.add.collider(boss, this.platformTreppe2);
+        this.physics.add.collider(boss, this.platformTreppe3);
+        this.physics.add.collider(boss, this.platformUnterDoor);
+        this.physics.add.collider(boss,this.platformDoor)
+
+        this.physics.add.collider(boss, this.ground);
+        this.physics.add.collider(boss, this.leftwall);
+        this.physics.add.collider(boss, this.rightwall);
+        this.physics.add.collider(boss, this.roof);
+
+
+        this.bossarray.push(boss);
+        boss.anims.play('gegnerAnim3',true);
+
+        this.colliderPlayerRobot7 = this.physics.add.collider(this.player, boss, this.hitBoss, null, this);
+
+        this.allcollider.push(this.colliderPlayerRobot7);
+
+        this.physics.add.overlap(this.laserGroup, boss, this.shootBoss, null, this);
+
+
+        this.physics.add.overlap(this.laserGroup, this.platformTreppe0, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformTreppe1, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformTreppe2, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformTreppe3, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformUnterDoor, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformVorKorridor, this.shootWall, null, this);
+
+        this.physics.add.overlap(this.laserGroup, this.ground, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.leftwall, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.rightwall, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.roof, this.shootWall, null, this);
+
+
+
+    }
+    spawnRobot(player, robot,x,y){
+        robot = this.physics.add.sprite(x, y, 'robot');
+
+        robot.setSize(12,20)
+        robot.setOffset(5,15)
+        robot.setBounce(1);
+        robot.setCollideWorldBounds(true);
+        robot.setVelocity(Phaser.Math.Between(0, 400), 20);
+        robot.setScale(4)
+
+        this.physics.add.overlap(this.laserGroup, robot, this.hitStars, null, this );
+
+        this.physics.add.collider(robot, this.platformVorKorridor);
+        this.physics.add.collider(robot, this.platformUnterDoor);
+        this.physics.add.collider(robot, this.platformTreppe0);
+        this.physics.add.collider(robot, this.platformTreppe1);
+        this.physics.add.collider(robot, this.platformTreppe2);
+        this.physics.add.collider(robot, this.platformTreppe3);
+        this.physics.add.collider(robot,this.platformDoor)
+
+        this.physics.add.collider(robot, this.ground);
+        this.physics.add.collider(robot, this.leftwall);
+        this.physics.add.collider(robot, this.rightwall);
+        this.physics.add.collider(robot, this.roof);
+
+
+        this.robotarray.push(robot);
+        robot.anims.play('gegnerAnim2',true);
+
+        this.colliderPlayerRobot7 = this.physics.add.collider(this.player, robot, this.hitRobot, null, this);
+
+        this.allcollider.push(this.colliderPlayerRobot7);
+
+        this.physics.add.overlap(this.laserGroup, robot, this.shootRobot, null, this);
+
+
+        this.physics.add.overlap(this.laserGroup, this.platformTreppe0, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformTreppe1, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformTreppe2, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformTreppe3, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformUnterDoor, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.platformVorKorridor, this.shootWall, null, this);
+
+        this.physics.add.overlap(this.laserGroup, this.ground, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.leftwall, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.rightwall, this.shootWall, null, this);
+        this.physics.add.overlap(this.laserGroup, this.roof, this.shootWall, null, this);
+            }
+    hitRobot (player, robot) {
+        if(this.leben <= 1 ){
+            this.sound.play("death", {volume: 0.5});
+            this.herz1.setVisible(false);
+            this.physics.pause();
+            player.setTint(0xff0000);
+            player.anims.play('turn');
+        }else {
+            this.sound.play("gettingHit", {volume: 0.5});
+            console.log("HIIHIHHIHIHIIHIHHIHI");
+
+            for (let i = 0; i < this.allcollider.length; i++) {
+                this.allcollider[i].active = false;
+            }
+            player.setTint(0x0088FF);
+            console.log(this.leben);                    --this.leben;
+
+            this.time.addEvent({
+                delay: 1500,
+                callback: ()=>{
+                    for (let i = 0; i < this.allcollider.length; i++) {
+                        this.allcollider[i].active = true;
+                    }
+                    player.setTint(0xffffff);
+                },
+                loop: false
+            });
+            console.log(this.leben)
+        }
+        //console.log("HIT")
+    }
+    hitBoss (player, boss) {
+        if(this.leben <= 1 ){
+            this.sound.play("death", {volume: 0.5});
+            this.herz1.setVisible(false);
+            this.physics.pause();
+            player.setTint(0xff0000);
+            player.anims.play('turn');
+        }else {
+            this.sound.play("gettingHit", {volume: 0.5});
+            console.log("HIIHIHHIHIHIIHIHHIHI");
+
+            for (let i = 0; i < this.allcollider.length; i++) {
+                this.allcollider[i].active = false;
+            }
+            player.setTint(0x0088FF);
+            console.log(this.leben);                    --this.leben;
+
+            this.time.addEvent({
+                delay: 1500,
+                callback: ()=>{
+                    for (let i = 0; i < this.allcollider.length; i++) {
+                        this.allcollider[i].active = true;
+                    }
+                    player.setTint(0xffffff);
+                },
+                loop: false
+            });
+            console.log(this.leben)
+        }
+        //console.log("HIT")
+    }
+    shootBoss(laser, boss) {
+        //console.log("Treffer");
+
+        boss.disableBody(true, true);
+
+        laser.disableBody(true, true);
+        laser.setActive(false);
+        laser.setVisible(false);
+        this.bossTod = true;
+        this.ziel.destroy(true)
+
+        //laser.destroy(true);
+    }
+    shootRobot (laser, robot) {
+        //console.log("Treffer");
+
+        robot.disableBody(true, true);
+
+        laser.disableBody(true, true);
+        laser.setActive(false);
+        laser.setVisible(false);
+
+        //laser.destroy(true);
+    }
+
+    shootWall(laser, wall) {
+        //console.log(" Wand");
+
+        wall.disableBody(true, true);
+        wall.setActive(false);
+        wall.setVisible(false);
+
+        //wall.destroy(true);
     }
 
 }

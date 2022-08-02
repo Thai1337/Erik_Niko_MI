@@ -66,10 +66,10 @@ export default class RoomScene extends Phaser.Scene {
         this.physics.add.existing(this.roof,true);
         // platforms
 
-        this.platfrom1 = this.add.tileSprite(100, 800 , 192+32,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platfrom1 = this.add.tileSprite(100, 800 , 192+32,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platfrom1, true)
 
-        this.platfrom2 = this.add.tileSprite(800-32, 600 , 320+64,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platfrom2 = this.add.tileSprite(800-32, 600 , 320+64,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platfrom2, true)
 
 
@@ -78,22 +78,22 @@ export default class RoomScene extends Phaser.Scene {
 
 
 
-        this.platfrom3 = this.add.tileSprite(860, 400 , 192,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platfrom3 = this.add.tileSprite(860, 400 , 192,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platfrom3, true)
 
-        this.platfrom4 = this.add.tileSprite(1400, 800 , 480,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platfrom4 = this.add.tileSprite(1400, 800 , 480,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platfrom4, true)
 
-        this.platfrom5 = this.add.tileSprite(32, 364 , 288+64,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platfrom5 = this.add.tileSprite(32, 364 , 288+64,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platfrom5, true)
 
-        this.platfrom6 = this.add.tileSprite(1500, 500 , 256,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platfrom6 = this.add.tileSprite(1500, 500 , 256,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platfrom6, true)
 
         this.box = this.add.tileSprite(864, 630 , 192,416,"ground3").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.box, true)
 
-        this.vplatfrom8 = this.add.tileSprite(960+128+64, 32, 32,540+32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.vplatfrom8 = this.add.tileSprite(960+128+64, 32, 32,540+32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.vplatfrom8, true)
 
         //this.hebel = this.physics.add.sprite(100, 200, "hebel");
@@ -142,7 +142,7 @@ export default class RoomScene extends Phaser.Scene {
 
         this.anims.create({
             key: 'gegnerAnim',
-            frames: this.anims.generateFrameNumbers('robot', { start: 0, end: 8 }),
+            frames: this.anims.generateFrameNumbers('robot', { start: 0, end: 7 }),
             frameRate: 10,
             repeat: -1
         });

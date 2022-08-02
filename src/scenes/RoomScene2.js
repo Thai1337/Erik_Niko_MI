@@ -52,22 +52,22 @@ export default class RoomScene2 extends Phaser.Scene {
         this.roof = this.add.tileSprite(0, 0 , 1920,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.roof,true);
         //Platforms
-        this.platformUnterDoor = this.add.tileSprite(32, 320 , 640*2+128+32,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platformUnterDoor = this.add.tileSprite(32, 320 , 640*2+128+32,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platformUnterDoor, true)
 
-        this.platformVorKorridor = this.add.tileSprite(640*2+128+32, 320 , 32,640-64,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platformVorKorridor = this.add.tileSprite(640*2+128+32, 320 , 32,640-64,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platformVorKorridor, true)
 
-        this.platformZzRechts0 = this.add.tileSprite(1920-320/2-32, 800 , 320/2,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platformZzRechts0 = this.add.tileSprite(1920-320/2-32, 800 , 320/2,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platformZzRechts0, true)
 
-        this.platformZzLinks0 = this.add.tileSprite(1920-640+128+64, 640 , 320/2,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platformZzLinks0 = this.add.tileSprite(1920-640+128+64, 640 , 320/2,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platformZzLinks0, true)
 
-        this.platformZzRechts1 = this.add.tileSprite(1920-320/2-32, 640-128-32, 320/2,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platformZzRechts1 = this.add.tileSprite(1920-320/2-32, 640-128-32, 320/2,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platformZzRechts1, true)
 
-        this.platformZzLinks1 = this.add.tileSprite(1920-640+128+64, 320 , 320/2,32,"ground3").setOrigin(0).setScrollFactor(0);
+        this.platformZzLinks1 = this.add.tileSprite(1920-640+128+64, 320 , 320/2,32,"ground1").setOrigin(0).setScrollFactor(0);
         this.physics.add.existing(this.platformZzLinks1, true)
 
         //input
@@ -111,8 +111,8 @@ export default class RoomScene2 extends Phaser.Scene {
             });
 
         this.anims.create({
-            key: 'gegnerAnim',
-            frames: this.anims.generateFrameNumbers('robot', { start: 0, end: 8 }),
+            key: 'gegnerAnim2',
+            frames: this.anims.generateFrameNumbers('robot', { start: 7, end: 15 }),
             frameRate: 10,
             repeat: -1
         });
@@ -294,7 +294,7 @@ export default class RoomScene2 extends Phaser.Scene {
 
 
         this.robotarray.push(robot);
-        robot.anims.play('gegnerAnim',true);
+        robot.anims.play('gegnerAnim2',true);
 
         this.collider2 =this.physics.add.collider(this.player, robot, this.hitRobot, null, this);
 
