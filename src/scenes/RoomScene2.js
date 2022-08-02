@@ -22,6 +22,10 @@ export default class RoomScene2 extends Phaser.Scene {
 
     }
     create() {
+        this.sound.stopAll();
+        this.sound.play("backgroundMusic2", {volume: 0.05});
+
+
         this.count = 3;
         this.killCount = 0;
         //console.log(this.count);
@@ -341,6 +345,8 @@ export default class RoomScene2 extends Phaser.Scene {
                 delay: 500,
                 callback: ()=>{
                     eventsCenter.emit('update-heart', this.leben);
+                    this.sound.play("pling");
+                    this.sound.stopAll();
                     this.scene.start(CST.SCENES.MENU,);
                 },
                 loop: false
@@ -357,11 +363,13 @@ export default class RoomScene2 extends Phaser.Scene {
 
     hitRobot (player, robot) {
     if(this.leben <= 1 ){
+        this.sound.play("death", {volume: 0.5});
         this.herz1.setVisible(false);
         this.physics.pause();
         player.setTint(0xff0000);
         player.anims.play('turn');
     }else {
+        this.sound.play("gettingHit", {volume: 0.5});
         console.log("HIIHIHHIHIHIIHIHHIHI");
 
         for (let i = 0; i < this.allcollider.length; i++) {

@@ -18,6 +18,7 @@ export default class MenuScene extends Phaser.Scene {
 
     }
     create() {
+        this.sound.play("mainMenuBackgroundMusic", {volume:0.1});
         this.add.image(0, 0, "background").setOrigin(0)
         this.add.image(0, 0, "wall").setOrigin(0)
         this.playDoor = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 * 1.56, "Door");
@@ -37,6 +38,7 @@ export default class MenuScene extends Phaser.Scene {
         this.playDoor.on("pointerup", () => {
             //console.log("OPEN THE GATES")
             if(this.counter === 1) {
+                this.sound.stopAll();
                 this.scene.start(CST.SCENES.ROOM,{leben: this.startLeben});
             }else if(this.counter === 2) {
                 this.scene.stop(CST.SCENES.ROOM);
@@ -99,7 +101,8 @@ export default class MenuScene extends Phaser.Scene {
 
         eventsCenter.on('update-heart', this.updateLeben, this);
 
-        this.label = this.add.text(200,400, 'LEVEL: ' + this.counter,{fontFamily:'dirtyoldtown',fontSize:40});
+        this.label = this.add.text(300,400, 'Level: ' + this.counter,{fontFamily:'dirtyoldtown',fontSize:40});
+        this.add.text(500, 340, "Door2Door",{fontFamily:'dirtyoldtown',fontSize:200})
     }
 
     updateCount(count) {

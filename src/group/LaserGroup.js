@@ -1,3 +1,4 @@
+import { CST } from "../CST.js";
 export default class LaserGroup extends Phaser.Physics.Arcade.Group
 {
     constructor(scene) {
@@ -63,6 +64,7 @@ class Laser extends Phaser.Physics.Arcade.Sprite {
     }*/
 
     fire(x, y) {
+        //this.sound.play("laserSound");
         this.setActive(true);
         this.setVisible(true);
         this.enableBody();

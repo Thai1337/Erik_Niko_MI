@@ -30,6 +30,9 @@ export default class RoomScene extends Phaser.Scene {
 
     }
     create() {
+        this.sound.play("backgroundMusic",{volume:0.05});
+
+
         this.count = 2;
         console.log(this.count);
 
@@ -198,8 +201,6 @@ export default class RoomScene extends Phaser.Scene {
         this.spawnHebel(this.player, "hebel");
         this.spawnDoor(this.player, "doorAnim");
 
-
-
         this.objective = this.add.text(1400,50, 'Objective: pull the Lever',{fontFamily:'dirtyoldtown',fontSize:25})
     }
 
@@ -331,11 +332,13 @@ export default class RoomScene extends Phaser.Scene {
 
     hitRobot (player, robot) {
         if(this.leben <= 1 ){
+            this.sound.play("death", {volume: 0.5});
             this.herz1.setVisible(false);
             this.physics.pause();
             player.setTint(0xff0000);
             player.anims.play('turn');
         }else {
+            this.sound.play("gettingHit", {volume: 0.5});
             console.log("HIIHIHHIHIHIIHIHHIHI");
 
             for (let i = 0; i < this.allcollider.length; i++) {
@@ -389,6 +392,7 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     hitHebel(player, hebel){
+        this.sound.play("pling");
         this.collider1.active = false;
         this.collider.active = false;
         this.box.destroy(true);
@@ -423,6 +427,7 @@ export default class RoomScene extends Phaser.Scene {
     }
 
     hitDoor(player, doorAnim){
+
         doorAnim.setPosition(1630,440)
         if(this.colliderPlayerDiamond5 == true) {
             //this.colliderPlayerDoor4.active = false;
@@ -432,6 +437,8 @@ export default class RoomScene extends Phaser.Scene {
                 delay: 400,
                 callback: ()=>{
                     eventsCenter.emit('update-heart', this.leben);
+                    this.sound.play("pling");
+                    this.sound.stopAll();
                     this.scene.start(CST.SCENES.MENU);
                 },
                 loop: false
@@ -442,6 +449,7 @@ export default class RoomScene extends Phaser.Scene {
         //}
         }
     hitDiamant(){
+        this.sound.play("pling");
         //console.log("HIT DIAMND");
         this.diamant.visible = false;
         this.colliderPlayerDiamond5 = true;
@@ -450,6 +458,5 @@ export default class RoomScene extends Phaser.Scene {
 
     shootLaser(){
         this.laserGroup.fireLaser(this.player.x, this.player.y);
-
     }
 }

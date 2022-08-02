@@ -19,7 +19,8 @@ export default class RoomScene2 extends Phaser.Scene {
 
     }
     create() {
-
+        this.sound.stopAll();
+        this.sound.play("backgroundMusic3", {volume: 0.05});
 
         this.add.image(0, 0, "background").setOrigin(0)
         this.laserGroup = new LaserGroup(this);
