@@ -3,12 +3,14 @@ import MenuScene from "./scenes/MenuScene.js";
 import RoomScene from "./scenes/RoomScene.js";
 import RoomScene2 from "./scenes/RoomScene2.js";
 import RoomScene3 from "./scenes/RoomScene3.js";
+import VictoryScene from "./scenes/VictoryScene.js";
+import GameOverScene from "./scenes/GameOverScene.js";
 let game = new Phaser.Game({
         type: Phaser.AUTO,
         width: 1920,
         height: 1080,
         scene:[
-            LoadScene, MenuScene, RoomScene, RoomScene2, RoomScene3
+            LoadScene, MenuScene, RoomScene, RoomScene2, RoomScene3, VictoryScene, GameOverScene
         ],
         render:{
                 pixelArt: true

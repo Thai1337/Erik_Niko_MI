@@ -5,5 +5,7 @@ export const CST = {
         ROOM: "ROOM",
         ROOM2: "ROOM2",
         ROOM3: "ROOM3",
+        VICTORY: "VICTORY",
+        GAMEOVER: "GAMEOVER",
     }
 }

@@ -20,14 +20,13 @@ export default class LoadScene extends Phaser.Scene {
 
 
 
-
         //this.load.image("laser", "../dist/assets/images/Laser.png");
         this.load.image("wall", "../dist/assets/images/wall.png");
         this.load.image("Door", "../dist/assets/images/door.png");
         this.load.image("DoorOpen", "../dist/assets/images/Door_Schrift.png");
 
         this.load.image("boden", "../dist/assets/images/boden2.png");
-        this.load.image("background", "../dist/assets/images/background.png");
+        this.load.image("background", "../dist/assets/images/backgroundNeu.png");
 
         this.load.image("ground1", "../dist/assets/images/Ground1.png");
         this.load.image("ground2", "../dist/assets/images/Ground2.png");
@@ -35,6 +34,8 @@ export default class LoadScene extends Phaser.Scene {
         //this.load.image("laser", "../dist/assets/images/Laser.png");
         this.load.image("laser1", "../dist/assets/images/Laser.png");
         this.load.image("heart", "../dist/assets/images/heart.png");
+        this.load.image("victory", "../dist/assets/images/Victory.png")
+        this.load.image("gameOver", "../dist/assets/images/Game-Over.png")
 
         this.load.spritesheet("portalAnim", "../dist/assets/sprites/potalAnimCUT.png", {
             frameWidth: 83/3,

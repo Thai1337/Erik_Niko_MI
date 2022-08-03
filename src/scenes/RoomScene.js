@@ -44,7 +44,9 @@ export default class RoomScene extends Phaser.Scene {
         //platforms.create(0, 1080, 'boden').setScale(10).refreshBody();
 
         // background
-        this.add.image(0, 0, "background").setOrigin(0)
+        this.background = this.add.tileSprite(0, 0 , 1920,1080,"background").setOrigin(0).setScrollFactor(0);
+        //this.add.existing(this.background,true);
+        //this.add.image(0, 0, "background").setOrigin(0)
 
         //herzen
         this.herz1 = this.add.image(40,50, "heart").setOrigin(0).setScrollFactor(0);
@@ -337,6 +339,13 @@ export default class RoomScene extends Phaser.Scene {
             this.physics.pause();
             player.setTint(0xff0000);
             player.anims.play('turn');
+            this.time.addEvent({
+                delay: 1500,
+                callback: ()=>{
+                    this.scene.start(CST.SCENES.GAMEOVER);
+                },
+                loop: false
+            });
         }else {
             this.sound.play("gettingHit", {volume: 0.5});
             console.log("HIIHIHHIHIHIIHIHHIHI");

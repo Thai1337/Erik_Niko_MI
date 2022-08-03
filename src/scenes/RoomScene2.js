@@ -31,7 +31,7 @@ export default class RoomScene2 extends Phaser.Scene {
         //console.log(this.count);
         eventsCenter.emit('update-count', this.count);
         //eventsCenter.on('lebenZuRaum2', this.getLeben, this);
-        this.add.image(0, 0, "background").setOrigin(0)
+        this.background = this.add.tileSprite(0, 0 , 1920,1080,"background").setOrigin(0).setScrollFactor(0);
         this.laserGroup = new LaserGroup(this);
         //herzen
         this.herz1 = this.add.image(40,50, "heart").setOrigin(0).setScrollFactor(0);
@@ -368,6 +368,13 @@ export default class RoomScene2 extends Phaser.Scene {
         this.physics.pause();
         player.setTint(0xff0000);
         player.anims.play('turn');
+        this.time.addEvent({
+            delay: 1500,
+            callback: ()=>{
+                this.scene.start(CST.SCENES.GAMEOVER);
+            },
+            loop: false
+        });
     }else {
         this.sound.play("gettingHit", {volume: 0.5});
         console.log("HIIHIHHIHIHIIHIHHIHI");
@@ -398,6 +405,10 @@ export default class RoomScene2 extends Phaser.Scene {
 
         this.killCount++;
         this.objective.setText('Objective: Kill ' + this.killCount + " of 4");
+
+        if(this.killCount === 4) {
+            this.objective.setText("Objective: go through the Door");
+        }
 
         robot.disableBody(true, true);
 

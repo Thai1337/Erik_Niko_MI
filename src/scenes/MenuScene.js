@@ -18,8 +18,9 @@ export default class MenuScene extends Phaser.Scene {
 
     }
     create() {
+
         this.sound.play("mainMenuBackgroundMusic", {volume:0.1});
-        this.add.image(0, 0, "background").setOrigin(0)
+        this.background = this.add.tileSprite(0, 0 , 1920,1080,"background").setOrigin(0).setScrollFactor(0);
         this.add.image(0, 0, "wall").setOrigin(0)
         this.playDoor = this.add.image(this.game.renderer.width / 2, this.game.renderer.height / 2 * 1.56, "Door");
         this.playDoor.setScale(15)
@@ -67,7 +68,7 @@ export default class MenuScene extends Phaser.Scene {
             this.heart4.setVisible(true);
             this.heart5.setVisible(true);
 
-            this.difficulty = this.add.text(1490, 400, "Schwierigkeit",{fontFamily:'dirtyoldtown',fontSize:40})
+            this.difficulty = this.add.text(1500, 400, "Difficulty",{fontFamily:'dirtyoldtown',fontSize:40})
             this.difficulty.setInteractive();
             this.difficulty.on("pointerup",()=>{
                 this.click++
@@ -102,7 +103,8 @@ export default class MenuScene extends Phaser.Scene {
         eventsCenter.on('update-heart', this.updateLeben, this);
 
         this.label = this.add.text(300,400, 'Level: ' + this.counter,{fontFamily:'dirtyoldtown',fontSize:40});
-        this.add.text(500, 340, "Door2Door",{fontFamily:'dirtyoldtown',fontSize:200})
+        this.name =this.add.text(540, 340, "Door2Door",{fontFamily:'dirtyoldtown',fontSize:150})
+
     }
 
     updateCount(count) {

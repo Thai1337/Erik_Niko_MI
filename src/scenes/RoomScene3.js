@@ -28,7 +28,7 @@ export default class RoomScene2 extends Phaser.Scene {
         this.sound.stopAll();
         this.sound.play("backgroundMusic3", {volume: 0.05});
 
-        this.add.image(0, 0, "background").setOrigin(0)
+        this.background = this.add.tileSprite(0, 0 , 1920,1080,"background").setOrigin(0).setScrollFactor(0);
         this.laserGroup = new LaserGroup(this);
         //herzen
         this.herz1 = this.add.image(40,50, "heart").setOrigin(0).setScrollFactor(0);
@@ -148,8 +148,10 @@ export default class RoomScene2 extends Phaser.Scene {
 
         this.spawnDoor(this.player, "doorAnim");
         this.spawnPortal(this.player,"portalAnim","portalAnim");
-        this.objective = this.add.text(1400,50, 'Objective: Have FUN!',{fontFamily:'dirtyoldtown',fontSize:25})
         this.spawnBoss(this.player, "robot", 200, 100);
+
+
+        this.objective = this.add.text(1200,50, 'Objective: Kill the Mastermind',{fontFamily:'dirtyoldtown',fontSize:25})
 
     }
     update ()
@@ -283,7 +285,7 @@ export default class RoomScene2 extends Phaser.Scene {
                 delay: 400,
                 callback: ()=>{
                     this.sound.stopAll();
-                    this.scene.start(CST.SCENES.MENU);
+                    this.scene.start(CST.SCENES.VICTORY);
                 },
                 loop: false
             });
@@ -304,6 +306,7 @@ export default class RoomScene2 extends Phaser.Scene {
     }
 
     hitPortal(player, portalAnim,portalAnim2){
+        this.objective.setText("Objective: go through the Door");
         portalAnim.setPosition(1920-128, 950)
             console.log("HITP")
 
@@ -425,6 +428,13 @@ export default class RoomScene2 extends Phaser.Scene {
             this.physics.pause();
             player.setTint(0xff0000);
             player.anims.play('turn');
+            this.time.addEvent({
+                delay: 1500,
+                callback: ()=>{
+                    this.scene.start(CST.SCENES.GAMEOVER);
+                },
+                loop: false
+            });
         }else {
             this.sound.play("gettingHit", {volume: 0.5});
             console.log("HIIHIHHIHIHIIHIHHIHI");
@@ -456,6 +466,13 @@ export default class RoomScene2 extends Phaser.Scene {
             this.physics.pause();
             player.setTint(0xff0000);
             player.anims.play('turn');
+            this.time.addEvent({
+                delay: 1500,
+                callback: ()=>{
+                    this.scene.start(CST.SCENES.GAMEOVER);
+                },
+                loop: false
+            });
         }else {
             this.sound.play("gettingHit", {volume: 0.5});
             console.log("HIIHIHHIHIHIIHIHHIHI");
@@ -482,6 +499,8 @@ export default class RoomScene2 extends Phaser.Scene {
     }
     shootBoss(laser, boss) {
         //console.log("Treffer");
+
+        this.objective.setText("Objective: go through the Portal");
 
         boss.disableBody(true, true);
 
