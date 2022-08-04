@@ -54,17 +54,7 @@ class Laser extends Phaser.Physics.Arcade.Sprite {
         this._leftShot = value;
     }
 
-    /*preUpdate(time, delta) {
-        super.preUpdate(time, delta);
-
-        if (this.y <= 0) {
-            this.setActive(false);
-            this.setVisible(false);
-        }
-    }*/
-
     fire(x, y) {
-        //this.sound.play("laserSound");
         this.setActive(true);
         this.setVisible(true);
         this.enableBody();

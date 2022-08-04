@@ -12,7 +12,6 @@ export default class LoadScene extends Phaser.Scene {
         this.load.audio("pling", "../dist/assets/audio/Blop-Mark_DiAngelo-79054334.mp3");
         this.load.audio("gettingHit", "../dist/assets/audio/Sharp Punch.mp3");
         this.load.audio("death", "../dist/assets/audio/Pain.mp3");
-        this.load.audio("laserSound", "../dist/assets/audio/Laser_Machine_Gun1.mp3");
         this.load.audio("backgroundMusic", "../dist/assets/audio/Platformer Theme.mp3");
         this.load.audio("mainMenuBackgroundMusic", "../dist/assets/audio/HoliznaCC0 - NPC Theme.mp3");
         this.load.audio("backgroundMusic2", "../dist/assets/audio/HoliznaCC0 - ICE temple.mp3");
@@ -20,7 +19,7 @@ export default class LoadScene extends Phaser.Scene {
 
 
 
-        //this.load.image("laser", "../dist/assets/images/Laser.png");
+
         this.load.image("wall", "../dist/assets/images/wall.png");
         this.load.image("Door", "../dist/assets/images/door.png");
         this.load.image("DoorOpen", "../dist/assets/images/Door_Schrift.png");
@@ -31,7 +30,7 @@ export default class LoadScene extends Phaser.Scene {
         this.load.image("ground1", "../dist/assets/images/Ground1.png");
         this.load.image("ground2", "../dist/assets/images/Ground2.png");
         this.load.image("ground3", "../dist/assets/images/Ground3.png");
-        //this.load.image("laser", "../dist/assets/images/Laser.png");
+
         this.load.image("laser1", "../dist/assets/images/Laser.png");
         this.load.image("heart", "../dist/assets/images/heart.png");
         this.load.image("victory", "../dist/assets/images/Victory.png")

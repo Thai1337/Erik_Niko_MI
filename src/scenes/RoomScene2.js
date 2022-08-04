@@ -187,18 +187,15 @@ export default class RoomScene2 extends Phaser.Scene {
         for (let i = 0; i < this.robotarray.length; i++) {
 
             if(this.player.x < this.robotarray[i].x) {
-                //this.robotarray[i].x -= 1.5;
                 this.robotarray[i].setVelocityX(-Phaser.Math.Between(0, 300));
             }else {
                 this.robotarray[i].setVelocityX(Phaser.Math.Between(0, 300));
-                //this.robotarray[i].x += 1.5;
             }
             if (this.player.y < this.robotarray[i].y){
                 this.robotarray[i].setVelocityY(-Phaser.Math.Between(0, 300));
             }
             else {
                 this.robotarray[i].setVelocityY(Phaser.Math.Between(0, 300));
-                //this.robotarray[i].x += 1.5;
             }
             switch (this.leben) {
                 case 4:
